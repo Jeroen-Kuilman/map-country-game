@@ -9,7 +9,13 @@ document
   });
 
 ////////////////////////////////////////////////////////////////
-const map = L.map("map").setView([51.505, -0.09], 13);
+// create module later
+// two test numbers
+const randomLat = Math.floor(Math.random() * 180 - 90);
+
+const randomLng = Math.floor(Math.random() * 360 - 180);
+
+const map = L.map("map").setView([randomLat, randomLng], 5);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution:
