@@ -54,6 +54,11 @@ input {
   font: inherit;
 }
 
+#map {
+  height: 100%;
+  min-height: 400px;
+}
+
 .hidden {
   display: none;
 }
