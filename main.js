@@ -20,8 +20,9 @@ countrySearch.addEventListener("blur", function () {
 });
 
 ////////////////////////////////////////////////////////////////
+const startButton = document.querySelector(".btn-start");
 
-const init = async function () {
+const controlRound = async function () {
   try {
     const data = await fetchCountryAPI();
     state.countries = data;
@@ -29,10 +30,18 @@ const init = async function () {
 
     gameMap(current.lat, current.lng);
 
+    document.querySelector(".instructions-title").textContent = current.name; // temporary feedback
     return state.currentCountry;
   } catch (err) {
     console.error(err);
   }
 };
 
+const init = function () {
+  controlRound();
+};
+
 init();
+startButton.addEventListener("click", function () {
+  controlRound();
+});

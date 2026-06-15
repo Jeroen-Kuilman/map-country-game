@@ -1,7 +1,7 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-let map;
+let map, marker;
 export const gameMap = function (lat, lng) {
   map = L.map("map").setView([lat, lng], 5);
   L.tileLayer(
@@ -12,5 +12,6 @@ export const gameMap = function (lat, lng) {
     },
   ).addTo(map);
 
+  marker = L.marker([lat, lng]).addTo(map);
   return map;
 };

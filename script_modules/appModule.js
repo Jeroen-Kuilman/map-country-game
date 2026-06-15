@@ -4,6 +4,7 @@ export const state = {
 };
 
 export const createCurrentCountryObject = function (data) {
+  // create a random number which will be based on the total amount of countries (data)
   const countryLotteryNum = Math.floor(Math.random() * data.length);
 
   const currentCountry = data[countryLotteryNum];
@@ -33,6 +34,7 @@ export const fetchCountryAPI = async function () {
       countryCoordsRes.json(),
     ]);
 
+    // merging arrays and filtering out incomplete data.
     const positions = countryCoordsData.data;
     const countriesMerged = countryInfoData.data
       .map((country) => {
