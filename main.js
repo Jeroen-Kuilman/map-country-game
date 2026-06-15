@@ -1,3 +1,4 @@
+import { getJSON } from "./script_modules/appModule";
 import { gameMap } from "./script_modules/mapModule";
 
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
@@ -16,3 +17,4 @@ countrySearch.addEventListener("blur", function () {
 
 ////////////////////////////////////////////////////////////////
 gameMap();
+getJSON();
