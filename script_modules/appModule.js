@@ -1,13 +1,16 @@
 export const state = {
   countries: [],
   currentCountry: {},
+  isInitialized: false,
 };
 
-export const createCurrentCountryObject = function (data) {
+export const getRandomCountryIndex = function (data) {
   // create a random number which will be based on the total amount of countries (data)
-  const countryLotteryNum = Math.floor(Math.random() * data.length);
+  return Math.floor(Math.random() * data.length);
+};
 
-  const currentCountry = data[countryLotteryNum];
+export const createCurrentCountryObject = function (data, randNum) {
+  const currentCountry = data[randNum];
   state.currentCountry = {
     name: currentCountry.name,
     flag: currentCountry.flag,

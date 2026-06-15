@@ -1,5 +1,6 @@
 import {
   state,
+  getRandomCountryIndex,
   createCurrentCountryObject,
   fetchCountryAPI,
 } from "./script_modules/appModule";
@@ -8,6 +9,7 @@ import { gameMap } from "./script_modules/mapModule";
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
 const countrySearch = document.querySelector("#country-search");
 
+// Will be added later.
 // li.addEventListener("mousedown", () => {
 //   // selectie werkt vóór blur
 // });
@@ -24,14 +26,16 @@ const startButton = document.querySelector(".btn-start");
 
 const controlRound = async function () {
   try {
-    const data = await fetchCountryAPI();
-    state.countries = data;
-    const current = createCurrentCountryObject(state.countries);
+    if (!state.isInitialized) {
+      state.countries = await fetchCountryAPI();
+      state.isInitialized = true;
+    }
 
+    const countryIndex = getRandomCountryIndex(state.countries);
+    const current = createCurrentCountryObject(state.countries, countryIndex);
     gameMap(current.lat, current.lng);
 
     document.querySelector(".instructions-title").textContent = current.name; // temporary feedback
-    return state.currentCountry;
   } catch (err) {
     console.error(err);
   }
@@ -39,9 +43,6 @@ const controlRound = async function () {
 
 const init = function () {
   controlRound();
+  startButton.addEventListener("click", controlRound);
 };
-
 init();
-startButton.addEventListener("click", function () {
-  controlRound();
-});
