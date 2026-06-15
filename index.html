@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guess the country!</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+
+    <script type="module" crossorigin src="/assets/index-CnHi4oLT.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-gkqJsLM4.css">
+  </head>
+  <body>
+    <div class="main-container">
+      <header class="header">
+        <h1>Guess the country!</h1>
+        <button class="btn btn-start" type="button">START</button>
+      </header>
+
+      <section class="content-container">
+        <aside class="sidebar">
+          <h2 class="instructions-title">Press start to play</h2>
+          <div class="search-box">
+            <label for="country-search"
+              >Guess the country you think the marker has landed in:</label
+            >
+            <input type="search" id="country-search" name="guess-searchbar" />
+            <div class="search-list hidden">
+              <ul>
+                <li class="search-list-country">country A</li>
+                <li class="search-list-country">country B</li>
+                <li class="search-list-country">country C</li>
+                <li class="search-list-country">country D</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stats-container">
+            <h2>Stats</h2>
+            <h3>Streak:</h3>
+            <p class="streak-display">🔥🔥</p>
+
+            <h3>Lifes:</h3>
+            <p class="lifes-display">💗💗💗</p>
+          </div>
+        </aside>
+        <main class="map-container">
+          <div id="map"></div>
+        </main>
+      </section>
+
+      <footer class="footer">
+        <h2>Game rules:</h2>
+        <p>Guess 3 times in a row correct to win!</p>
+        <p>You guess wrong, a life is lost!</p>
+      </footer>
+    </div>
+  </body>
+</html>
