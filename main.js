@@ -2,18 +2,27 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
-document
-  .querySelector("#country-search")
-  .addEventListener("click", function () {
-    document.querySelector(".search-list").classList.toggle("hidden");
-  });
+const countrySearch = document.querySelector("#country-search");
+
+// li.addEventListener("mousedown", () => {
+//   // selectie werkt vóór blur
+// });
+
+countrySearch.addEventListener("focus", function () {
+  document.querySelector(".search-list").classList.remove("hidden");
+});
+countrySearch.addEventListener("blur", function () {
+  document.querySelector(".search-list").classList.add("hidden");
+});
 
 ////////////////////////////////////////////////////////////////
 // create module later
 // two test numbers
-const randomLat = Math.floor(Math.random() * 180 - 90);
+const randomLat = Math.random() * 180 - 90;
 
-const randomLng = Math.floor(Math.random() * 360 - 180);
+const randomLng = Math.random() * 360 - 180;
+
+console.log(randomLat, randomLng);
 
 const map = L.map("map").setView([randomLat, randomLng], 5);
 L.tileLayer(

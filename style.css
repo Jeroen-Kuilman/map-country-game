@@ -106,14 +106,15 @@ input {
 .search-box {
   display: flex;
   flex-direction: column;
-  z-index: 501;
+  /* z-index: 500; */
 }
 
 .search-list {
   background-color: var(--first-color);
   box-shadow: 5px 5px 26px 6px rgba(0, 0, 0, 0.233);
   padding: var(--space-sm) var(--space-lg) var(--space-md) var(--space-md);
-  border-radius: 0 0 var(--space-lg) 0;
+  /* border-radius: 0 0 var(--space-lg) 0; */
+  opacity: 0.8;
 }
 
 .search-list-country {
