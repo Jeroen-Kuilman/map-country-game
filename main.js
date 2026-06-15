@@ -1,4 +1,4 @@
-import { fetchCountryAPI } from "./script_modules/appModule";
+import { state, fetchCountryAPI } from "./script_modules/appModule";
 import { gameMap } from "./script_modules/mapModule";
 
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
@@ -16,5 +16,5 @@ countrySearch.addEventListener("blur", function () {
 });
 
 ////////////////////////////////////////////////////////////////
-gameMap();
+gameMap(state.country.lat, state.country.lng);
 // fetchCountryAPI()

@@ -1,14 +1,8 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-export const gameMap = function () {
-  const randomLat = Math.random() * 180 - 90;
-
-  const randomLng = Math.random() * 360 - 180;
-
-  console.log(randomLat, randomLng);
-
-  const map = L.map("map").setView([randomLat, randomLng], 5);
+export const gameMap = function (lat, lng) {
+  const map = L.map("map").setView([lat, lng], 5);
   L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
     {
