@@ -1,16 +1,19 @@
 export const state = {
-  country: {},
+  countries: [],
+  currentCountry: {},
 };
 
-const createCountryObject = function (data, num) {
-  console.log(data[0]);
-  const country = data[num];
-  return (state.country = {
-    name: country.name,
-    flag: country.flag,
-    lat: country.lat,
-    lng: country.lng,
-  });
+export const createCurrentCountryObject = function (data) {
+  const countryLotteryNum = Math.floor(Math.random() * data.length);
+
+  const currentCountry = data[countryLotteryNum];
+  state.currentCountry = {
+    name: currentCountry.name,
+    flag: currentCountry.flag,
+    lat: currentCountry.lat,
+    lng: currentCountry.lng,
+  };
+  return state.currentCountry;
 };
 
 export const fetchCountryAPI = async function () {
@@ -53,8 +56,3 @@ export const fetchCountryAPI = async function () {
     console.error(err);
   }
 };
-// const arr = getJSON();
-// createCountryArray(arr, 0);
-const arr = await fetchCountryAPI();
-createCountryObject(arr, Math.floor(Math.random() * (arr.length - 1)));
-console.log(state.country);

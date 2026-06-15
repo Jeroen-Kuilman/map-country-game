@@ -1,8 +1,9 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+let map;
 export const gameMap = function (lat, lng) {
-  const map = L.map("map").setView([lat, lng], 5);
+  map = L.map("map").setView([lat, lng], 5);
   L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
     {

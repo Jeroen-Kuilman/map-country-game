@@ -1,4 +1,8 @@
-import { state, fetchCountryAPI } from "./script_modules/appModule";
+import {
+  state,
+  createCurrentCountryObject,
+  fetchCountryAPI,
+} from "./script_modules/appModule";
 import { gameMap } from "./script_modules/mapModule";
 
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
@@ -16,5 +20,19 @@ countrySearch.addEventListener("blur", function () {
 });
 
 ////////////////////////////////////////////////////////////////
-gameMap(state.country.lat, state.country.lng);
-// fetchCountryAPI()
+
+const init = async function () {
+  try {
+    const data = await fetchCountryAPI();
+    state.countries = data;
+    const current = createCurrentCountryObject(state.countries);
+
+    gameMap(current.lat, current.lng);
+
+    return state.currentCountry;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+init();
