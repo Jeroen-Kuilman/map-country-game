@@ -1,3 +1,5 @@
+import { config } from "./../config.js";
+
 export const state = {
   countries: [],
   currentCountry: {},
@@ -10,41 +12,53 @@ export const getRandomCountryIndex = function (data) {
 };
 
 export const createCurrentCountryObject = function (data, randNum) {
-  const currentCountry = data[randNum];
+  const index = randNum;
+  const currentCountry = data[index];
   state.currentCountry = {
     name: currentCountry.name,
     flag: currentCountry.flag,
-    lat: currentCountry.lat,
-    lng: currentCountry.lng,
+    population: currentCountry.population,
+    lat: +currentCountry.lat,
+    lng: +currentCountry.lng,
+    index: index, // possible future use
   };
   return state.currentCountry;
 };
 
 export const fetchCountryAPI = async function () {
   try {
-    const [countryInfoRes, countryCoordsRes] = await Promise.all([
-      fetch(
-        "https://countriesnow.space/api/v0.1/countries/info?returns=name,flag",
-      ),
-      fetch("https://countriesnow.space/api/v0.1/countries/positions"),
-    ]);
+    const [countryInfoRes, countryCoordsRes, countryPopRes] = await Promise.all(
+      [
+        fetch(
+          "https://countriesnow.space/api/v0.1/countries/info?returns=name,flag",
+        ),
+        fetch("https://countriesnow.space/api/v0.1/countries/positions"),
+        fetch("https://countriesnow.space/api/v0.1/countries/population"),
+      ],
+    );
 
-    if (!countryInfoRes.ok || !countryCoordsRes.ok)
+    if (!countryInfoRes.ok || !countryCoordsRes.ok || !countryPopRes.ok)
       throw new Error(`Fetch failed`);
 
-    const [countryInfoData, countryCoordsData] = await Promise.all([
-      countryInfoRes.json(),
-      countryCoordsRes.json(),
-    ]);
+    const [countryInfoData, countryCoordsData, countryPopData] =
+      await Promise.all([
+        countryInfoRes.json(),
+        countryCoordsRes.json(),
+        countryPopRes.json(),
+      ]);
 
     // merging arrays and filtering out incomplete data.
     const positions = countryCoordsData.data;
+    const populations = countryPopData.data;
     const countriesMerged = countryInfoData.data
       .map((country) => {
         const pos = positions.find((p) => p.name === country.name);
+        const pop = populations.find((p) => p.country === country.name);
+        const latestPop = pop?.populationCounts?.at(-1)?.value ?? null;
         return {
           name: country.name,
           flag: country.flag,
+          population: latestPop,
           lat: pos?.lat ?? null,
           lng: pos?.long ?? null,
         };
@@ -53,7 +67,9 @@ export const fetchCountryAPI = async function () {
         (country) =>
           country.flag !== undefined &&
           country.lat !== null &&
-          country.lng !== null,
+          country.lng !== null &&
+          country.population !== null &&
+          country.population > config.MIN_POP_SIZE,
       );
 
     return countriesMerged;

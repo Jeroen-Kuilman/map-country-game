@@ -44,5 +44,6 @@ const controlRound = async function () {
 const init = function () {
   controlRound();
   startButton.addEventListener("click", controlRound);
+  console.log(state);
 };
 init();
