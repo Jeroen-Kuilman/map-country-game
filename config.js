@@ -5,5 +5,5 @@ export const config = Object.freeze({
 
 export const RESULT = Object.freeze({
   CORRECT: "correct",
-  WRONg: "wrong",
+  WRONG: "wrong",
 });
