@@ -5,6 +5,7 @@ import {
   fetchCountryAPI,
 } from "./script_modules/appModule";
 import { gameMap } from "./script_modules/mapModule";
+import CountrySearchList from "./script_modules/listInterfaceModule";
 
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
 const countrySearch = document.querySelector("#country-search");
@@ -36,6 +37,9 @@ const controlRound = async function () {
     gameMap(current.lat, current.lng);
 
     document.querySelector(".instructions-title").textContent = current.name; // temporary feedback
+
+    // NEEDS A SEPARATE CONTROL FUNCTION
+    CountrySearchList.renderMarkup(state.countries);
   } catch (err) {
     console.error(err);
   }

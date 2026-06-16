@@ -50,6 +50,7 @@ export const fetchCountryAPI = async function () {
     // merging arrays and filtering out incomplete data.
     const positions = countryCoordsData.data;
     const populations = countryPopData.data;
+    console.log(populations);
     const countriesMerged = countryInfoData.data
       .map((country) => {
         const pos = positions.find((p) => p.name === country.name);
@@ -69,6 +70,7 @@ export const fetchCountryAPI = async function () {
           country.lat !== null &&
           country.lng !== null &&
           country.population !== null &&
+          // added to limit the amount of tiny countries
           country.population > config.MIN_POP_SIZE,
       );
 
