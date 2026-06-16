@@ -5,6 +5,7 @@ export const state = {
   currentCountry: {},
   isInitialized: false,
   roundResult: null,
+  isProcessing: false,
 };
 
 export const getRandomCountryIndex = function (data) {

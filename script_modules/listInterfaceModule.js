@@ -1,4 +1,4 @@
-import { config } from "../config";
+import { config } from "../config.js";
 
 class CountrySearchList {
   _parentElement = document.querySelector(".search-list");

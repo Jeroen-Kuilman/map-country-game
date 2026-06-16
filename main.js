@@ -1,3 +1,4 @@
+import { config } from "./config.js";
 import {
   state,
   getRandomCountryIndex,
@@ -39,7 +40,7 @@ const controlRound = async function () {
 
     document.querySelector(".instructions-title").textContent = current.name; // temporary feedback REMOVE WHEN DONE!!!!!!!!!
 
-    console.log(state.roundResult);
+    console.log(state.roundResult); // temporary roundresults
   } catch (err) {
     console.error(err);
   }
@@ -53,27 +54,35 @@ const controlList = function (e) {
 const controlListInput = function (e) {
   const item = e.target.closest(".search-list-country");
   if (!item) return;
-  return (DOM.input.value = item.dataset.country);
+  DOM.input.value = item.dataset.country;
 };
 
 const controlListAutoComplete = function (e) {
   if (!listInterfaceModule.results.length) return;
-  if (e.key === "Tab") {
-    e.preventDefault();
-    DOM.input.value = listInterfaceModule.results[0].name;
-  }
+  e.preventDefault();
+  DOM.input.value = listInterfaceModule.results[0].name;
 };
 
 const controlInputConfirm = function (e) {
   if (!listInterfaceModule.results.length) return;
-  if (
-    e.key === "Enter" &&
-    !DOM.countrySearchList.classList.contains("hidden")
-  ) {
+
+  // find better alternative for this check
+  if (!DOM.countrySearchList.classList.contains("hidden")) {
+    if (e.type === "keydown")
+      // Making sure the final answer will ALWAYS match with an existing country.
+      DOM.input.value = listInterfaceModule.results[0].name;
+
     const answer =
       DOM.input.value.toLowerCase() === state.currentCountry.name.toLowerCase();
-    updateGameState(answer);
-    controlRound();
+
+    // timeout to visualize the answer before going to the next round
+    if (state.isProcessing) return;
+    state.isProcessing = true;
+    setTimeout(() => {
+      updateGameState(answer);
+      controlRound();
+      state.isProcessing = false;
+    }, config.UPDATE_ROUND_SECONDS * 1000);
   }
 };
 
@@ -84,14 +93,12 @@ const init = function () {
 
   DOM.countrySearchList.addEventListener("click", function (e) {
     controlListInput(e);
-  });
-
-  DOM.input.addEventListener("keydown", function (e) {
-    controlListAutoComplete(e);
-  });
-
-  DOM.input.addEventListener("keydown", function (e) {
     controlInputConfirm(e);
+  });
+
+  DOM.input.addEventListener("keydown", function (e) {
+    if (e.key === "Tab") controlListAutoComplete(e);
+    if (e.key === "Enter") controlInputConfirm(e);
   });
 
   controlRound();
