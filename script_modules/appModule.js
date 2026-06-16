@@ -1,9 +1,10 @@
-import { config } from "./../config.js";
+import { config, RESULT } from "./../config.js";
 
 export const state = {
   countries: [],
   currentCountry: {},
   isInitialized: false,
+  roundResult: null,
 };
 
 export const getRandomCountryIndex = function (data) {
@@ -76,5 +77,14 @@ export const fetchCountryAPI = async function () {
     return countriesMerged;
   } catch (err) {
     console.error(err);
+  }
+};
+
+export const updateGameState = function (answer) {
+  state.roundResult = answer ? RESULT.CORRECT : RESULT.WRONG;
+  if (state.roundResult === RESULT.CORRECT) {
+    return;
+  }
+  if (state.countries === RESULT.WRONG) {
   }
 };

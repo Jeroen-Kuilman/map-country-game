@@ -3,13 +3,11 @@ import {
   getRandomCountryIndex,
   createCurrentCountryObject,
   fetchCountryAPI,
+  updateGameState,
 } from "./script_modules/appModule";
 import { gameMap } from "./script_modules/mapModule";
 import listInterfaceModule from "./script_modules/listInterfaceModule";
 
-// temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
-
-////////////////////////////////////////////////////////////////
 const DOM = {
   countrySearchList: document.querySelector(".search-list"),
   startButton: document.querySelector(".btn-start"),
@@ -31,12 +29,17 @@ const controlRound = async function () {
     if (!state.isInitialized) {
       state.countries = await initiateFetch();
     }
+    // empty previous search result and hide list if not hidden
+    DOM.input.value = "";
+    listInterfaceModule.hideList();
 
     const countryIndex = getRandomCountryIndex(state.countries);
     const current = createCurrentCountryObject(state.countries, countryIndex);
     gameMap(current.lat, current.lng);
 
-    document.querySelector(".instructions-title").textContent = current.name; // temporary feedback
+    document.querySelector(".instructions-title").textContent = current.name; // temporary feedback REMOVE WHEN DONE!!!!!!!!!
+
+    console.log(state.roundResult);
   } catch (err) {
     console.error(err);
   }
@@ -63,11 +66,15 @@ const controlListAutoComplete = function (e) {
 
 const controlInputConfirm = function (e) {
   if (!listInterfaceModule.results.length) return;
-  if (e.key === "Enter" && !DOM.countrySearchList.classList.contains("hidden"))
-    if (
-      DOM.input.value.toLowerCase() === state.currentCountry.name.toLowerCase()
-    )
-      controlRound();
+  if (
+    e.key === "Enter" &&
+    !DOM.countrySearchList.classList.contains("hidden")
+  ) {
+    const answer =
+      DOM.input.value.toLowerCase() === state.currentCountry.name.toLowerCase();
+    updateGameState(answer);
+    controlRound();
+  }
 };
 
 const init = function () {

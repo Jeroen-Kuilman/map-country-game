@@ -11,7 +11,7 @@ class CountrySearchList {
   renderMarkup(data, query) {
     this._data = data;
     if (!query) {
-      this._hideList();
+      this.hideList();
       this._parentElement.innerHTML = "";
       return;
     }
@@ -34,7 +34,7 @@ class CountrySearchList {
       .slice(0, config.MAX_LIST_RESULTS);
   }
 
-  _hideList() {
+  hideList() {
     this._parentElement.classList.add("hidden");
   }
 
