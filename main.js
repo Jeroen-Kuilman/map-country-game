@@ -8,17 +8,8 @@ import { gameMap } from "./script_modules/mapModule";
 import listInterfaceModule from "./script_modules/listInterfaceModule";
 
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
-const countrySearch = document.querySelector("#country-search");
-const countrySearchLI = document.querySelector(".search-list-country");
-
-// Will be added later.
-// li.addEventListener("mousedown", () => {
-//   // selectie werkt vóór blur
-// });
 
 ////////////////////////////////////////////////////////////////
-const startButton = document.querySelector(".btn-start");
-const input = document.querySelector("#country-search");
 
 const initiateFetch = async function () {
   try {
@@ -43,26 +34,28 @@ const controlRound = async function () {
 };
 
 const controlList = function (e) {
-  console.log(e);
-
   const query = e.target.value.toLowerCase();
   listInterfaceModule.renderMarkup(state.countries, query);
 };
 
 const init = function () {
+  const countrySearchList = document.querySelector(".search-list");
+  const startButton = document.querySelector(".btn-start");
+  const input = document.querySelector("#country-search");
+
   input.addEventListener("input", function (e) {
     controlList(e);
   });
+  countrySearchList.addEventListener("click", function (e) {
+    const item = e.target.closest(".search-list-country");
+    if (!item) return;
+    input.value = item.dataset.country;
+  });
 
-  countrySearch.addEventListener("focus", function () {
-    document.querySelector(".search-list").classList.remove("hidden");
-  });
-  // li.addEventListener("mousedown", function (e) {
-  //   console.log(e.target);
+  // window.addEventListener("keydown", function (e) {
+  //   if (e.key === "Enter") console.log(e);
+  //   else console.log("wrong button!");
   // });
-  countrySearch.addEventListener("blur", function () {
-    document.querySelector(".search-list").classList.add("hidden");
-  });
 
   controlRound();
   startButton.addEventListener("click", controlRound);
