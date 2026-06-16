@@ -50,7 +50,6 @@ export const fetchCountryAPI = async function () {
     // merging arrays and filtering out incomplete data.
     const positions = countryCoordsData.data;
     const populations = countryPopData.data;
-    console.log(populations);
     const countriesMerged = countryInfoData.data
       .map((country) => {
         const pos = positions.find((p) => p.name === country.name);
