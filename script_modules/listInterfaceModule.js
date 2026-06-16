@@ -6,6 +6,8 @@ class CountrySearchList {
 
   _message = "No matching countries found 🌍⁉️";
 
+  results = [];
+
   renderMarkup(data, query) {
     this._data = data;
     if (!query) {
@@ -16,15 +18,20 @@ class CountrySearchList {
 
     this._showList();
 
-    const results = this._data
-      .filter((c) => !query || c.name.toLowerCase().startsWith(query))
+    this.results = this._generateSearchResults(this._data, query);
+
+    if (!this.results.length)
+      return (this._parentElement.innerHTML = this._message);
+
+    const markup = this.results.map((el) => this._generateMarkup(el)).join("");
+    this._parentElement.innerHTML = markup;
+  }
+
+  _generateSearchResults(data, query) {
+    return data
+      .filter((c) => c.name.toLowerCase().startsWith(query))
       .sort((a, b) => a.name.localeCompare(b.name))
       .slice(0, config.MAX_LIST_RESULTS);
-
-    if (!results.length) return (this._parentElement.innerHTML = this._message);
-
-    const markup = results.map((el) => this._generateMarkup(el)).join("");
-    this._parentElement.innerHTML = markup;
   }
 
   _hideList() {

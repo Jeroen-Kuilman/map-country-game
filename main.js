@@ -10,6 +10,11 @@ import listInterfaceModule from "./script_modules/listInterfaceModule";
 // temporary eventlistener to toggle the search list //// REMOVE WHEN FINISHED
 
 ////////////////////////////////////////////////////////////////
+const DOM = {
+  countrySearchList: document.querySelector(".search-list"),
+  startButton: document.querySelector(".btn-start"),
+  input: document.querySelector("#country-search"),
+};
 
 const initiateFetch = async function () {
   try {
@@ -22,15 +27,19 @@ const initiateFetch = async function () {
 };
 
 const controlRound = async function () {
-  if (!state.isInitialized) {
-    state.countries = await initiateFetch();
+  try {
+    if (!state.isInitialized) {
+      state.countries = await initiateFetch();
+    }
+
+    const countryIndex = getRandomCountryIndex(state.countries);
+    const current = createCurrentCountryObject(state.countries, countryIndex);
+    gameMap(current.lat, current.lng);
+
+    document.querySelector(".instructions-title").textContent = current.name; // temporary feedback
+  } catch (err) {
+    console.error(err);
   }
-
-  const countryIndex = getRandomCountryIndex(state.countries);
-  const current = createCurrentCountryObject(state.countries, countryIndex);
-  gameMap(current.lat, current.lng);
-
-  document.querySelector(".instructions-title").textContent = current.name; // temporary feedback
 };
 
 const controlList = function (e) {
@@ -38,26 +47,47 @@ const controlList = function (e) {
   listInterfaceModule.renderMarkup(state.countries, query);
 };
 
-const init = function () {
-  const countrySearchList = document.querySelector(".search-list");
-  const startButton = document.querySelector(".btn-start");
-  const input = document.querySelector("#country-search");
+const controlListInput = function (e) {
+  const item = e.target.closest(".search-list-country");
+  if (!item) return;
+  return (DOM.input.value = item.dataset.country);
+};
 
-  input.addEventListener("input", function (e) {
+const controlListAutoComplete = function (e) {
+  if (!listInterfaceModule.results.length) return;
+  if (e.key === "Tab") {
+    e.preventDefault();
+    DOM.input.value = listInterfaceModule.results[0].name;
+  }
+};
+
+const controlInputConfirm = function (e) {
+  if (!listInterfaceModule.results.length) return;
+  if (e.key === "Enter" && !DOM.countrySearchList.classList.contains("hidden"))
+    if (
+      DOM.input.value.toLowerCase() === state.currentCountry.name.toLowerCase()
+    )
+      controlRound();
+};
+
+const init = function () {
+  DOM.input.addEventListener("input", function (e) {
     controlList(e);
   });
-  countrySearchList.addEventListener("click", function (e) {
-    const item = e.target.closest(".search-list-country");
-    if (!item) return;
-    input.value = item.dataset.country;
+
+  DOM.countrySearchList.addEventListener("click", function (e) {
+    controlListInput(e);
   });
 
-  // window.addEventListener("keydown", function (e) {
-  //   if (e.key === "Enter") console.log(e);
-  //   else console.log("wrong button!");
-  // });
+  DOM.input.addEventListener("keydown", function (e) {
+    controlListAutoComplete(e);
+  });
+
+  DOM.input.addEventListener("keydown", function (e) {
+    controlInputConfirm(e);
+  });
 
   controlRound();
-  startButton.addEventListener("click", controlRound);
+  DOM.startButton.addEventListener("click", controlRound);
 };
 init();
