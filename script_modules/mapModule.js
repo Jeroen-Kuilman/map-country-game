@@ -10,13 +10,12 @@ import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 ///////////////////////////////////////////////////////
 
 class MapInterface {
-  map = false;
-  marker = null;
-  markers = [];
-  currentCoords = [];
-  geoLayer = null;
+  _map = false;
+  _marker = null;
+  _markers = [];
+  _geoLayer = null;
 
-  blueIcon = new L.Icon({
+  _blueIcon = new L.Icon({
     iconUrl: blueIconUrl,
     shadowUrl: shadowUrl,
     iconSize: [25, 41],
@@ -24,7 +23,7 @@ class MapInterface {
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   });
-  greenIcon = new L.Icon({
+  _greenIcon = new L.Icon({
     iconUrl: greenIconUrl,
     shadowUrl: shadowUrl,
     iconSize: [25, 41],
@@ -33,7 +32,7 @@ class MapInterface {
     shadowSize: [41, 41],
   });
 
-  redIcon = new L.Icon({
+  _redIcon = new L.Icon({
     iconUrl: redIconUrl,
     shadowUrl: shadowUrl,
     iconSize: [25, 41],
@@ -43,8 +42,8 @@ class MapInterface {
   });
 
   renderGameMap(lat, lng, lastRound, geoData) {
-    if (!this.map) {
-      this.map = L.map("map").setView([lat, lng], 5);
+    if (!this._map) {
+      this._map = L.map("map").setView([lat, lng], 5);
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
         {
@@ -52,52 +51,47 @@ class MapInterface {
           minZoom: 1,
           attribution: "&copy; OpenStreetMap &copy; CartoDB",
         },
-      ).addTo(this.map);
+      ).addTo(this._map);
     } else {
-      this.map.flyTo([lat, lng], 5, {
+      this._map.flyTo([lat, lng], 5, {
         duration: 1,
       });
     }
-    this.addGeo(geoData);
+    this._addGeo(geoData);
 
-    this.renderBlueMarker(lat, lng);
+    this._renderMarker(lat, lng);
 
-    return this.map;
+    return this._map;
   }
 
-  addGeo(geoData) {
+  _addGeo(geoData) {
     if (!geoData) return;
-    if (this.geoLayer) this.geoLayer.remove();
-    this.geoLayer = L.geoJSON(geoData, {
+    if (this._geoLayer) this._geoLayer.remove();
+    this._geoLayer = L.geoJSON(geoData, {
       style: {
         color: "#b6cdbd", // border color
         weight: 1, // border thickness
         fillOpacity: 0, // transparent fill — just borders
       },
-    }).addTo(this.map);
+    }).addTo(this._map);
   }
 
   setMarkerResult(index, result) {
-    const marker = this.markers[index];
+    const marker = this._markers[index];
     if (!marker) return;
     if (result === RESULT.CORRECT) {
-      marker.setIcon(this.greenIcon);
+      marker.setIcon(this._greenIcon);
     } else {
-      marker.setIcon(this.redIcon);
+      marker.setIcon(this._redIcon);
     }
   }
-  renderGreenMarker(lat, lng) {
-    L.marker([lat, lng], { icon: this.greenIcon }).addTo(this.map);
-  }
-  renderBlueMarker(lat, lng) {
-    const marker = L.marker([lat, lng], { icon: this.blueIcon }).addTo(
-      this.map,
+
+  _renderMarker(lat, lng) {
+    const marker = L.marker([lat, lng], { icon: this._blueIcon }).addTo(
+      this._map,
     );
-    this.marker = marker;
-    this.markers.push(marker);
-  }
-  renderRedMarker(lat, lng) {
-    L.marker([lat, lng], { icon: this.redIcon }).addTo(this.map);
+    this._marker = marker;
+    this._markers.push(marker);
   }
 
   addPolyLine(lastTwoCoords, result) {
@@ -106,7 +100,7 @@ class MapInterface {
       weight: 2,
       opacity: 60,
       dashArray: "5, 10",
-    }).addTo(this.map);
+    }).addTo(this._map);
   }
 }
 
