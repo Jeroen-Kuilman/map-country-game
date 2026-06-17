@@ -14,7 +14,7 @@ L.Icon.Default.mergeOptions({
 });
 
 ///////////////////////////////////////////////////////
-let map, marker;
+let map, marker, greenIcon;
 export const gameMap = function (lat, lng) {
   if (!map) {
     map = L.map("map").setView([lat, lng], 5);
@@ -29,7 +29,16 @@ export const gameMap = function (lat, lng) {
     map.setView([lat, lng], 5);
   }
 
-  marker = L.marker([lat, lng]).addTo(map);
+  greenIcon = new L.Icon({
+    iconUrl: "./img/marker-icon-2x-green.png",
+    shadowUrl: "./img/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
+  marker = L.marker([lat, lng], { icon: greenIcon }).addTo(map);
 
   return map;
 };
