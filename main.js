@@ -5,9 +5,11 @@ import {
   createCurrentCountryObject,
   fetchCountryAPI,
   updateGameState,
+  updateRoundHistory,
 } from "./script_modules/appModule";
-import { gameMap } from "./script_modules/mapModule";
-import listInterfaceModule from "./script_modules/listInterfaceModule";
+import MapInterface from "./script_modules/mapModule";
+import CountrySearchList from "./script_modules/listInterfaceModule";
+import { map } from "leaflet";
 
 const DOM = {
   countrySearchList: document.querySelector(".search-list"),
@@ -32,15 +34,19 @@ const controlRound = async function () {
     }
     // empty previous search result and hide list if not hidden
     DOM.input.value = "";
-    listInterfaceModule.hideList();
+    CountrySearchList.hideList();
 
     const countryIndex = getRandomCountryIndex(state.countries);
     const current = createCurrentCountryObject(state.countries, countryIndex);
-    gameMap(current.lat, current.lng);
+    MapInterface.renderGameMap(current.lat, current.lng, state.roundResult);
 
     document.querySelector(".instructions-title").textContent = current.name; // temporary feedback REMOVE WHEN DONE!!!!!!!!!
 
     console.log(state.roundResult); // temporary roundresults
+    updateRoundHistory(state.roundResult, current.lat, current.lng);
+
+    const roundIndex = state.rounds.length - 2;
+    MapInterface.setMarkerResult(roundIndex, state.roundResult);
   } catch (err) {
     console.error(err);
   }
@@ -48,7 +54,7 @@ const controlRound = async function () {
 
 const controlList = function (e) {
   const query = e.target.value.toLowerCase();
-  listInterfaceModule.renderMarkup(state.countries, query);
+  CountrySearchList.renderMarkup(state.countries, query);
 };
 
 const controlListInput = function (e) {
@@ -58,19 +64,19 @@ const controlListInput = function (e) {
 };
 
 const controlListAutoComplete = function (e) {
-  if (!listInterfaceModule.results.length) return;
+  if (!CountrySearchList.results.length) return;
   e.preventDefault();
-  DOM.input.value = listInterfaceModule.results[0].name;
+  DOM.input.value = CountrySearchList.results[0].name;
 };
 
 const controlInputConfirm = function (e) {
-  if (!listInterfaceModule.results.length) return;
+  if (!CountrySearchList.results.length) return;
 
   // find better alternative for this check
   if (!DOM.countrySearchList.classList.contains("hidden")) {
     if (e.type === "keydown")
       // Making sure the final answer will ALWAYS match with an existing country.
-      DOM.input.value = listInterfaceModule.results[0].name;
+      DOM.input.value = CountrySearchList.results[0].name;
 
     const answer =
       DOM.input.value.toLowerCase() === state.currentCountry.name.toLowerCase();

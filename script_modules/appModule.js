@@ -5,6 +5,7 @@ export const state = {
   currentCountry: {},
   isInitialized: false,
   roundResult: null,
+  rounds: [],
   isProcessing: false,
 };
 
@@ -88,4 +89,12 @@ export const updateGameState = function (answer) {
   }
   if (state.countries === RESULT.WRONG) {
   }
+};
+
+export const updateRoundHistory = function (answer, lat, lng) {
+  state.rounds.push({
+    result: answer ?? null,
+    markerCoords: [lat, lng],
+    country: state.currentCountry.name,
+  });
 };
