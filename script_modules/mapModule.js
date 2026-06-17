@@ -1,17 +1,11 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { RESULT } from "../config";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-// Fix broken marker icons
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  iconRetinaUrl: markerIcon2x,
-  shadowUrl: markerShadow,
-});
+import blueIconUrl from "../img/marker-icon-2x-blue.png";
+import redIconUrl from "../img/marker-icon-2x-red.png";
+import greenIconUrl from "../img/marker-icon-2x-green.png";
+import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 
 ///////////////////////////////////////////////////////
 
@@ -22,16 +16,16 @@ class MapInterface {
   currentCoords = [];
 
   blueIcon = new L.Icon({
-    iconUrl: "./img/marker-icon-2x-blue.png",
-    shadowUrl: "./img/marker-shadow.png",
+    iconUrl: blueIconUrl,
+    shadowUrl: shadowUrl,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
   });
   greenIcon = new L.Icon({
-    iconUrl: "./img/marker-icon-2x-green.png",
-    shadowUrl: "./img/marker-shadow.png",
+    iconUrl: greenIconUrl,
+    shadowUrl: shadowUrl,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -39,8 +33,8 @@ class MapInterface {
   });
 
   redIcon = new L.Icon({
-    iconUrl: "./img/marker-icon-2x-red.png",
-    shadowUrl: "./img/marker-shadow.png",
+    iconUrl: redIconUrl,
+    shadowUrl: shadowUrl,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -54,11 +48,14 @@ class MapInterface {
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
         {
           maxZoom: 19,
+          minZoom: 1,
           attribution: "&copy; OpenStreetMap &copy; CartoDB",
         },
       ).addTo(this.map);
     } else {
-      this.map.setView([lat, lng], 5);
+      this.map.flyTo([lat, lng], 5, {
+        duration: 1,
+      });
     }
 
     this.renderBlueMarker(lat, lng);
@@ -89,10 +86,14 @@ class MapInterface {
     L.marker([lat, lng], { icon: this.redIcon }).addTo(this.map);
   }
 
-  //   addPolyLine(latlng) {
-  //     console.log(latlng);
-  //     L.polyline(latlng, { color: "red" }).addTo(map);
-  //   }
+  addPolyLine(lastTwoCoords, result) {
+    const polyline = L.polyline(lastTwoCoords, {
+      color: `${result === RESULT.CORRECT ? "green" : "red"}`,
+      weight: 2,
+      opacity: 60,
+      dashArray: "5, 10",
+    }).addTo(this.map);
+  }
 }
 
 export default new MapInterface();

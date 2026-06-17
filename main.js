@@ -1,4 +1,4 @@
-import { config } from "./config.js";
+import { config, TEST_VARIABLES } from "./config.js";
 import {
   state,
   getRandomCountryIndex,
@@ -47,6 +47,12 @@ const controlRound = async function () {
 
     const roundIndex = state.rounds.length - 2;
     MapInterface.setMarkerResult(roundIndex, state.roundResult);
+
+    if (state.rounds.length < 2) return;
+    const lastTwoCoords = state.rounds
+      .slice(-2)
+      .map((round) => round.markerCoords);
+    MapInterface.addPolyLine(lastTwoCoords, state.roundResult);
   } catch (err) {
     console.error(err);
   }
