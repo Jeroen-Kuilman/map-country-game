@@ -1,4 +1,4 @@
-import { config, TEST_VARIABLES } from "./config.js";
+import { config } from "./config.js";
 import {
   state,
   getRandomCountryIndex,
@@ -41,7 +41,6 @@ const controlRound = async function () {
       state.geoData,
     );
 
-    console.log(state.roundResult); // temporary roundresults
     updateRoundHistory(state.roundResult, current.lat, current.lng);
 
     const roundIndex = state.rounds.length - 2;

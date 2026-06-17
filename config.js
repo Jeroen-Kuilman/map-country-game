@@ -8,8 +8,3 @@ export const RESULT = Object.freeze({
   CORRECT: "correct",
   WRONG: "wrong",
 });
-
-export const TEST_VARIABLES = Object.freeze({
-  TEST_COORDS_1: [52.5, 5.75],
-  TEST_COORDS_2: [42, 19],
-});

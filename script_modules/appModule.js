@@ -91,7 +91,7 @@ export const fetchGeoData = async function () {
     if (!geoRes.ok) throw new Error(`Fetch GeoData failed`);
 
     const geoData = await geoRes.json();
-    console.log(geoData);
+
     return geoData;
   } catch (err) {
     console.error(err);
