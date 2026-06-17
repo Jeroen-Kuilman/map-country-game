@@ -7,6 +7,7 @@ export const state = {
   roundResult: null,
   rounds: [],
   isProcessing: false,
+  geoData: null,
 };
 
 export const getRandomCountryIndex = function (data) {
@@ -41,7 +42,7 @@ export const fetchCountryAPI = async function () {
     );
 
     if (!countryInfoRes.ok || !countryCoordsRes.ok || !countryPopRes.ok)
-      throw new Error(`Fetch failed`);
+      throw new Error(`Fetch country API failed`);
 
     const [countryInfoData, countryCoordsData, countryPopData] =
       await Promise.all([
@@ -82,13 +83,22 @@ export const fetchCountryAPI = async function () {
   }
 };
 
+export const fetchGeoData = async function () {
+  try {
+    const geoRes = await fetch(
+      "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson",
+    );
+    if (!geoRes.ok) throw new Error(`Fetch GeoData failed`);
+
+    const geoData = await geoRes.json();
+    console.log(geoData);
+    return geoData;
+  } catch (err) {
+    console.error(err);
+  }
+};
 export const updateGameState = function (answer) {
   state.roundResult = answer ? RESULT.CORRECT : RESULT.WRONG;
-  if (state.roundResult === RESULT.CORRECT) {
-    return;
-  }
-  if (state.countries === RESULT.WRONG) {
-  }
 };
 
 export const updateRoundHistory = function (answer, lat, lng) {

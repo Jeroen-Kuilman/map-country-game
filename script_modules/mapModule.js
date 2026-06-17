@@ -14,6 +14,7 @@ class MapInterface {
   marker = null;
   markers = [];
   currentCoords = [];
+  geoLayer = null;
 
   blueIcon = new L.Icon({
     iconUrl: blueIconUrl,
@@ -41,7 +42,7 @@ class MapInterface {
     shadowSize: [41, 41],
   });
 
-  renderGameMap(lat, lng, lastRound) {
+  renderGameMap(lat, lng, lastRound, geoData) {
     if (!this.map) {
       this.map = L.map("map").setView([lat, lng], 5);
       L.tileLayer(
@@ -57,10 +58,23 @@ class MapInterface {
         duration: 1,
       });
     }
+    this.addGeo(geoData);
 
     this.renderBlueMarker(lat, lng);
 
     return this.map;
+  }
+
+  addGeo(geoData) {
+    if (!geoData) return;
+    if (this.geoLayer) this.geoLayer.remove();
+    this.geoLayer = L.geoJSON(geoData, {
+      style: {
+        color: "#b6cdbd", // border color
+        weight: 1, // border thickness
+        fillOpacity: 0, // transparent fill — just borders
+      },
+    }).addTo(this.map);
   }
 
   setMarkerResult(index, result) {
