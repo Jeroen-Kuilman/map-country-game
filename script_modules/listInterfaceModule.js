@@ -1,6 +1,6 @@
 import { config } from "../config.js";
 
-class CountrySearchList {
+class ListInterface {
   _parentElement = document.querySelector(".search-list");
   _data;
 
@@ -58,4 +58,4 @@ class CountrySearchList {
   }
 }
 
-export default new CountrySearchList();
+export default new ListInterface();

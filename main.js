@@ -9,10 +9,11 @@ import {
   updateRoundHistory,
 } from "./script_modules/appModule";
 import MapInterface from "./script_modules/mapModule";
-import CountrySearchList from "./script_modules/listInterfaceModule";
+import ListInterface from "./script_modules/listInterfaceModule";
+import StatsInterface from "./script_modules/statsInterfaceModule.js";
 
 const DOM = {
-  countrySearchList: document.querySelector(".search-list"),
+  ListInterface: document.querySelector(".search-list"),
   startButton: document.querySelector(".btn-start"),
   input: document.querySelector("#country-search"),
 };
@@ -29,7 +30,7 @@ const controlRound = async function () {
 
     // empty previous search result and hide list if not hidden
     DOM.input.value = "";
-    CountrySearchList.hideList();
+    ListInterface.hideList();
 
     const countryIndex = getRandomCountryIndex(state.countries);
     const current = createCurrentCountryObject(state.countries, countryIndex);
@@ -58,7 +59,7 @@ const controlRound = async function () {
 
 const controlList = function (e) {
   const query = e.target.value.toLowerCase();
-  CountrySearchList.renderMarkup(state.countries, query);
+  ListInterface.renderMarkup(state.countries, query);
 };
 
 const controlListInput = function (e) {
@@ -68,19 +69,19 @@ const controlListInput = function (e) {
 };
 
 const controlListAutoComplete = function (e) {
-  if (!CountrySearchList.results.length) return;
+  if (!ListInterface.results.length) return;
   e.preventDefault();
-  DOM.input.value = CountrySearchList.results[0].name;
+  DOM.input.value = ListInterface.results[0].name;
 };
 
 const controlInputConfirm = function (e) {
-  if (!CountrySearchList.results.length) return;
+  if (!ListInterface.results.length) return;
 
   // find better alternative for this check
-  if (!DOM.countrySearchList.classList.contains("hidden")) {
+  if (!DOM.ListInterface.classList.contains("hidden")) {
     if (e.type === "keydown")
       // Making sure the final answer will ALWAYS match with an existing country.
-      DOM.input.value = CountrySearchList.results[0].name;
+      DOM.input.value = ListInterface.results[0].name;
 
     const answer =
       DOM.input.value.toLowerCase() === state.currentCountry.name.toLowerCase();
@@ -101,7 +102,7 @@ const init = function () {
     controlList(e);
   });
 
-  DOM.countrySearchList.addEventListener("click", function (e) {
+  DOM.ListInterface.addEventListener("click", function (e) {
     controlListInput(e);
     controlInputConfirm(e);
   });

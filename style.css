@@ -106,14 +106,18 @@ input {
 .search-box {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .search-list {
+  position: absolute;
+  top: 100%;
+  width: 100%;
   background-color: var(--first-color);
   box-shadow: 5px 5px 26px 6px rgba(0, 0, 0, 0.233);
   padding: var(--space-sm) var(--space-lg) var(--space-md) var(--space-md);
   /* border-radius: 0 0 var(--space-lg) 0; */
-  opacity: 0.8;
+  opacity: 0.95;
 }
 
 .search-list-country {
@@ -125,6 +129,7 @@ input {
   border-bottom-style: solid;
   border-bottom-color: var(--fourth-color);
   border-bottom-width: 1px;
+  gap: 1rem;
 
   padding-left: 0.2rem;
   padding-right: 2rem;
