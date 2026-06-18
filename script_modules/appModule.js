@@ -8,6 +8,8 @@ export const state = {
   rounds: [],
   isProcessing: false,
   geoData: null,
+  playerWrongPoints: config.POINTS_INIT_VALUE,
+  playerCorrectPoints: config.POINTS_INIT_VALUE,
 };
 
 export const getRandomCountryIndex = function (data) {
@@ -97,8 +99,40 @@ export const fetchGeoData = async function () {
     console.error(err);
   }
 };
+
+const checkGameEndingConditions = function () {
+  if (state.playerCorrectPoints === config.PLAYER_CORRECT_MAX) {
+    state.playerCorrectPoints = config.POINTS_INIT_VALUE;
+    state.playerWrongPoints = config.POINTS_INIT_VALUE;
+
+    return `WON`;
+  }
+  if (state.playerWrongPoints === config.PLAYER_WRONG_MAX) {
+    state.playerCorrectPoints = config.POINTS_INIT_VALUE;
+    state.playerWrongPoints = config.POINTS_INIT_VALUE;
+
+    return `LOST`;
+  }
+};
+
+const applyResult = function (result) {
+  if (result === RESULT.CORRECT) {
+    state.playerCorrectPoints++;
+  } else {
+    state.playerWrongPoints++;
+  }
+
+  const checkResult = checkGameEndingConditions();
+
+  return checkResult;
+};
+
 export const updateGameState = function (answer) {
-  state.roundResult = answer ? RESULT.CORRECT : RESULT.WRONG;
+  const result = answer ? RESULT.CORRECT : RESULT.WRONG;
+
+  state.roundResult = result;
+  const checkResult = applyResult(result);
+  return checkResult;
 };
 
 export const updateRoundHistory = function (answer, lat, lng) {

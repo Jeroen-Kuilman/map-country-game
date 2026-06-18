@@ -43,6 +43,12 @@ const controlRound = async function () {
 
     updateRoundHistory(state.roundResult, current.lat, current.lng);
 
+    StatsInterface.renderMarkup(
+      state.roundResult,
+      state.playerCorrectPoints,
+      state.playerWrongPoints,
+    );
+
     const roundIndex = state.rounds.length - 2;
     MapInterface.setMarkerResult(roundIndex, state.roundResult);
 
@@ -89,8 +95,12 @@ const controlInputConfirm = function (e) {
     if (state.isProcessing) return;
     state.isProcessing = true;
     setTimeout(() => {
-      updateGameState(answer);
-      controlRound();
+      const checkResult = updateGameState(answer);
+
+      if (!checkResult) controlRound();
+
+      if (checkResult === "WON") console.log("Game won");
+      if (checkResult === "LOST") console.log("Game lost");
       state.isProcessing = false;
     }, config.UPDATE_ROUND_SECONDS * 1000);
   }

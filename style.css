@@ -152,6 +152,25 @@ input {
   width: 20px;
 }
 
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stat-group {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  justify-content: start;
+  gap: 5px 15px;
+  align-items: center;
+}
+
+.stat-icon {
+  width: 18px;
+  height: auto;
+}
+
 .footer {
   display: flex;
   justify-content: space-around;

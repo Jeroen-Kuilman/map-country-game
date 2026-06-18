@@ -1,20 +1,40 @@
+import redIconUrl from "../img/marker-icon-red.png";
+import greenIconUrl from "../img/marker-icon-green.png";
+
+import { RESULT } from "./../config.js";
 class StatsInterface {
-  _parentElement = document.querySelector(".stats-container");
+  _rightContainer = document.querySelector(".right-answers-display");
+  _wrongContainer = document.querySelector(".wrong-answers-display");
+  _rightCounter = document.querySelector(".right-counter");
+  _wrongCounter = document.querySelector(".wrong-counter");
 
-  renderMarkup(data) {
-    this._data = data;
+  renderMarkup(lastRoundAnswer, correctCount, wrongCount) {
+    const data = lastRoundAnswer;
+    if (!data) return;
+    const counter = data === RESULT.CORRECT ? correctCount : wrongCount;
 
-    this._parentElement.innerHTML = markup;
+    const iconElement =
+      data === RESULT.CORRECT ? this._rightContainer : this._wrongContainer;
+
+    const counterElement =
+      data === RESULT.CORRECT ? this._rightCounter : this._wrongCounter;
+
+    const iconMarkup = this._generateIcon(data);
+
+    iconElement.insertAdjacentHTML("beforeend", iconMarkup);
+    counterElement.textContent = counter;
   }
-  _generateMarkup(country) {
-    return `
-    <h2>Stats</h2>
-            <h3>Points:</h3>
-            <p class="points-display">🔥🔥</p>
-
-            <h3>Lifes:</h3>
-            <p class="lifes-display">💗💗💗</p>
+  _generateIcon(data) {
+    return `<img src="${data === RESULT.CORRECT ? greenIconUrl : redIconUrl}" class="stat-icon" />
+    
     `;
+
+    clearMarkup();
+    this._rightContainer.innerHTML = "";
+    this._wrongContainer.innerHTML = "";
+
+    this._rightCounter.textContent = 0;
+    this._wrongCounter.textContent = 0;
   }
 }
 
