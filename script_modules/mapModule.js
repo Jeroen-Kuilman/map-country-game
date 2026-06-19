@@ -44,7 +44,7 @@ class MapInterface {
     shadowSize: [41, 41],
   });
 
-  renderGameMap(geoData, lat, lng, lastRound) {
+  renderGameMap(geoData, lat = 0, lng = 0, lastRound = null) {
     if (!this._map) {
       this._map = L.map("map", {
         maxBounds: [
@@ -106,9 +106,17 @@ class MapInterface {
     }).addTo(this._map);
   }
 
-  setMarkerResult(index, result) {
+  setMarkerResult(index, result, country) {
     const marker = this._markers[index];
     if (!marker) return;
+    marker.bindPopup(country).openPopup();
+    marker.on("mouseover", function (e) {
+      this.openPopup();
+    });
+    marker.on("mouseout", function (e) {
+      this.closePopup();
+    });
+
     if (result === RESULT.CORRECT) {
       marker.setIcon(this._greenIcon);
     } else {

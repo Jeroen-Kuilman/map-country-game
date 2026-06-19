@@ -5,7 +5,7 @@ export const state = {
   currentCountry: {},
   isInitialized: false,
   roundResult: null,
-  rounds: [], // keep for tracking game history as future feature
+  rounds: [], // keep for tracking game history as a possible future feature
   isProcessing: false,
   geoData: null,
   playerWrongPoints: config.POINTS_INIT_VALUE,

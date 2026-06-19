@@ -91,7 +91,11 @@ const controlApplyRoundResult = function () {
 
   // apply new marker color
   const roundIndex = state.rounds.length - 1;
-  MapInterface.setMarkerResult(roundIndex, state.roundResult);
+  MapInterface.setMarkerResult(
+    roundIndex,
+    state.roundResult,
+    state.currentCountry.name,
+  );
 };
 
 const controlFinalizeGame = function (result) {
@@ -181,7 +185,7 @@ const init = async function () {
     }
 
     // setup initial map
-    mapModule.renderGameMap(state.geoData, 0, 0, null); // temporary input (besides geoData)
+    mapModule.renderGameMap(state.geoData); // temporary input (besides geoData)
 
     initEventListeners();
   } catch (err) {

@@ -1,7 +1,7 @@
 import redIconUrl from "../img/marker-icon-red.png";
 import greenIconUrl from "../img/marker-icon-green.png";
 
-import { RESULT } from "./../config.js";
+import { config, RESULT } from "./../config.js";
 class StatsInterface {
   _rightContainer = document.querySelector(".right-answers-display");
   _wrongContainer = document.querySelector(".wrong-answers-display");
@@ -12,6 +12,10 @@ class StatsInterface {
     const data = lastRoundAnswer;
     if (!data) return;
     const counter = data === RESULT.CORRECT ? correctCount : wrongCount;
+    const counterTarget =
+      data === RESULT.CORRECT
+        ? config.PLAYER_CORRECT_MAX
+        : config.PLAYER_WRONG_MAX;
 
     const iconElement =
       data === RESULT.CORRECT ? this._rightContainer : this._wrongContainer;
@@ -22,7 +26,7 @@ class StatsInterface {
     const iconMarkup = this._generateIcon(data);
 
     iconElement.insertAdjacentHTML("beforeend", iconMarkup);
-    counterElement.textContent = counter;
+    counterElement.textContent = `${counter} / ${counterTarget}`;
   }
   _generateIcon(data) {
     return `<img src="${data === RESULT.CORRECT ? greenIconUrl : redIconUrl}" class="stat-icon" />
@@ -33,8 +37,8 @@ class StatsInterface {
     this._rightContainer.innerHTML = "";
     this._wrongContainer.innerHTML = "";
 
-    this._rightCounter.textContent = rightDefault;
-    this._wrongCounter.textContent = wrongDefault;
+    this._rightCounter.textContent = `${rightDefault} / ${config.PLAYER_WRONG_MAX}`;
+    this._wrongCounter.textContent = `${wrongDefault} / ${config.PLAYER_WRONG_MAX}`;
   }
 }
 
