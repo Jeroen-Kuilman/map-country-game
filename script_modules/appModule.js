@@ -5,16 +5,12 @@ export const state = {
   currentCountry: {},
   isInitialized: false,
   roundResult: null,
-  rounds: [],
+  rounds: [], // keep for tracking game history as future feature
   isProcessing: false,
   geoData: null,
   playerWrongPoints: config.POINTS_INIT_VALUE,
   playerCorrectPoints: config.POINTS_INIT_VALUE,
-};
-
-export const getRandomCountryIndex = function (data) {
-  // create a random number which will be based on the total amount of countries (data)
-  return Math.floor(Math.random() * data.length);
+  isPlaying: false,
 };
 
 export const createCurrentCountryObject = function (data, randNum) {
@@ -29,6 +25,30 @@ export const createCurrentCountryObject = function (data, randNum) {
     index: index, // possible future use
   };
   return state.currentCountry;
+};
+
+const createInitialStateObject = function () {
+  return {
+    currentCountry: {},
+    playerWrongPoints: config.POINTS_INIT_VALUE, // 0
+    playerCorrectPoints: config.POINTS_INIT_VALUE,
+    roundResult: null,
+    isProcessing: false,
+    rounds: [],
+  };
+};
+
+export const resetState = function () {
+  Object.assign(state, createInitialStateObject());
+};
+
+export const toggleStateIsPlaying = function (isPlaying) {
+  state.isPlaying = !state.isPlaying;
+};
+
+export const getRandomCountryIndex = function (data) {
+  // create a random number which will be based on the total amount of countries (data)
+  return Math.floor(Math.random() * data.length);
 };
 
 export const fetchCountryAPI = async function () {
@@ -101,17 +121,11 @@ export const fetchGeoData = async function () {
 };
 
 const checkGameEndingConditions = function () {
-  if (state.playerCorrectPoints === config.PLAYER_CORRECT_MAX) {
-    state.playerCorrectPoints = config.POINTS_INIT_VALUE;
-    state.playerWrongPoints = config.POINTS_INIT_VALUE;
-
-    return `WON`;
+  if (state.playerCorrectPoints >= config.PLAYER_CORRECT_MAX) {
+    return RESULT.WON;
   }
-  if (state.playerWrongPoints === config.PLAYER_WRONG_MAX) {
-    state.playerCorrectPoints = config.POINTS_INIT_VALUE;
-    state.playerWrongPoints = config.POINTS_INIT_VALUE;
-
-    return `LOST`;
+  if (state.playerWrongPoints >= config.PLAYER_WRONG_MAX) {
+    return RESULT.LOST;
   }
 };
 
@@ -121,23 +135,19 @@ const applyResult = function (result) {
   } else {
     state.playerWrongPoints++;
   }
-
-  const checkResult = checkGameEndingConditions();
-
-  return checkResult;
 };
 
 export const updateGameState = function (answer) {
   const result = answer ? RESULT.CORRECT : RESULT.WRONG;
 
   state.roundResult = result;
-  const checkResult = applyResult(result);
-  return checkResult;
+  applyResult(result);
+  return checkGameEndingConditions();
 };
 
-export const updateRoundHistory = function (answer, lat, lng) {
+export const updateRoundHistory = function (result = "test", lat, lng) {
   state.rounds.push({
-    result: answer ?? null,
+    result,
     markerCoords: [lat, lng],
     country: state.currentCountry.name,
   });

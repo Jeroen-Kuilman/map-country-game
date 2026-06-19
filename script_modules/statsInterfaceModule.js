@@ -28,13 +28,13 @@ class StatsInterface {
     return `<img src="${data === RESULT.CORRECT ? greenIconUrl : redIconUrl}" class="stat-icon" />
     
     `;
-
-    clearMarkup();
+  }
+  clearMarkup(rightDefault, wrongDefault) {
     this._rightContainer.innerHTML = "";
     this._wrongContainer.innerHTML = "";
 
-    this._rightCounter.textContent = 0;
-    this._wrongCounter.textContent = 0;
+    this._rightCounter.textContent = rightDefault;
+    this._wrongCounter.textContent = wrongDefault;
   }
 }
 

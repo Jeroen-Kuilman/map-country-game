@@ -56,6 +56,11 @@ class ListInterface {
     </li>
     `;
   }
+
+  clearMarkup() {
+    this._parentElement.innerHTML = "";
+    this.hideList();
+  }
 }
 
 export default new ListInterface();
