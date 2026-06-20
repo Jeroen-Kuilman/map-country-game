@@ -1,4 +1,5 @@
 import { config } from "../config.js";
+import fallbackFlag from "../img/NO_FLAG_drawio.png";
 
 class ListInterface {
   _parentElement = document.querySelector(".search-list");
@@ -45,14 +46,15 @@ class ListInterface {
   _generateMarkup(country) {
     return `
     <li class="search-list-country" data-country="${country.name}">
-        <p>${country.name}</p>
-        <figure>
-        <img
-            class="country-flag"
-            src="${country.flag}"
-            alt="flag"
-        />
-        </figure>
+      <p>${country.name}</p>
+      <figure>
+      <img
+        class="country-flag"
+        src="${country.flag}"
+        alt="flag of ${country.name}"
+        onerror="this.onerror=null;this.src='${fallbackFlag}';this.classList.add('country-flag');"
+      />
+      </figure>
     </li>
     `;
   }

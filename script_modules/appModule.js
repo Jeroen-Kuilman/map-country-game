@@ -11,6 +11,7 @@ export const state = {
   playerWrongPoints: config.POINTS_INIT_VALUE,
   playerCorrectPoints: config.POINTS_INIT_VALUE,
   isPlaying: false,
+  gameResult: null,
 };
 
 export const createCurrentCountryObject = function (data, randNum) {
@@ -42,7 +43,7 @@ export const resetState = function () {
   Object.assign(state, createInitialStateObject());
 };
 
-export const toggleStateIsPlaying = function (isPlaying) {
+export const toggleStateIsPlaying = function () {
   state.isPlaying = !state.isPlaying;
 };
 
@@ -122,10 +123,12 @@ export const fetchGeoData = async function () {
 
 const checkGameEndingConditions = function () {
   if (state.playerCorrectPoints >= config.PLAYER_CORRECT_MAX) {
-    return RESULT.WON;
+    state.gameResult = RESULT.WON;
+    return state.gameResult;
   }
   if (state.playerWrongPoints >= config.PLAYER_WRONG_MAX) {
-    return RESULT.LOST;
+    state.gameResult = RESULT.LOST;
+    return state.gameResult;
   }
 };
 

@@ -1,4 +1,4 @@
-import { config, RESULT } from "./config.js";
+import { config, RESULT, FEEDBACK_MESSAGE } from "./config.js";
 import {
   state,
   toggleStateIsPlaying,
@@ -20,21 +20,22 @@ const DOM = {
   searchList: document.querySelector(".search-list"),
   startButton: document.querySelector(".btn-start"),
   input: document.querySelector("#country-search"),
+  feedbackMessage: document.querySelector(".instructions-title"),
 };
 
 const controlGame = function () {
-  if (state.isPlaying) {
-    // reset relevant state and UI parts
-    resetState();
-    StatsInterface.clearMarkup(
-      state.playerCorrectPoints,
-      state.playerWrongPoints,
-    );
-    mapModule.clearMapUI();
+  // reset relevant state and UI parts
+  resetState();
+  StatsInterface.clearMarkup(
+    state.playerCorrectPoints,
+    state.playerWrongPoints,
+  );
+  mapModule.clearMapUI();
 
-    // control round (once)
-    controlSetupRound();
-  }
+  // control round (once)
+  controlSetupRound();
+  // initial isPlaying feedback
+  controlFeedback();
 };
 
 const controlSetupRound = function () {
@@ -70,7 +71,7 @@ const controlFinalizeRound = function () {
   state.isProcessing = true;
   setTimeout(() => {
     if (!checkResult) controlSetupRound();
-    else controlFinalizeGame(checkResult);
+    else controlFinalizeGame();
 
     state.isProcessing = false;
   }, config.UPDATE_ROUND_SECONDS * 1000);
@@ -98,21 +99,29 @@ const controlApplyRoundResult = function () {
   );
 };
 
-const controlFinalizeGame = function (result) {
+const controlFeedback = function () {
+  const feedback = (message) => (DOM.feedbackMessage.textContent = message);
+  // default feedback
+  if (!state.isPlaying && !state.gameResult)
+    return feedback(FEEDBACK_MESSAGE.SIDEBAR_DEFAULT);
+  // has won feedback
+  if (!state.isPlaying && state.gameResult === RESULT.WON)
+    return feedback(FEEDBACK_MESSAGE.SIDEBAR_GAMEOVER_WON);
+  // has lost feedback
+  if (!state.isPlaying && state.gameResult === RESULT.LOST)
+    return feedback(FEEDBACK_MESSAGE.SIDEBAR_GAMEOVER_LOST);
+  // is playing feedback
+  if (state.isPlaying) return feedback(FEEDBACK_MESSAGE.SIDEBAR_ISPLAYING);
+};
+
+const controlFinalizeGame = function () {
+  toggleStateIsPlaying();
   DOM.input.value = "";
   ListInterface.clearMarkup();
 
-  // temporary if statements for testing purposes
-  if (result === RESULT.WON) {
-    toggleStateIsPlaying();
-    console.log("Game won");
-    console.log(state.isPlaying);
-  }
-  if (result === RESULT.LOST) {
-    toggleStateIsPlaying();
-    console.log("Game lost");
-    console.log(state.isPlaying);
-  }
+  // gameover feedback (needs to be after toggleStateIsPlaying)
+  console.log(state.isPlaying, state.gameResult);
+  controlFeedback();
 };
 
 const controlInputConfirm = function (e) {
@@ -183,6 +192,9 @@ const init = async function () {
       ]);
       state.isInitialized = true;
     }
+
+    // initial feedback
+    controlFeedback();
 
     // setup initial map
     mapModule.renderGameMap(state.geoData); // temporary input (besides geoData)

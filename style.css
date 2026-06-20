@@ -150,6 +150,13 @@ input {
 
 .country-flag {
   width: 20px;
+  height: 13px;
+  min-width: 20px;
+  min-height: 13px;
+  max-width: 20px;
+  max-height: 13px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .stats-container {
