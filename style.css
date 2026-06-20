@@ -75,9 +75,9 @@ h1 {
 .header {
   background-color: var(--fourth-color);
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: var(--space-lg) 0;
+  padding: var(--space-lg);
   color: var(--text-color-light);
   z-index: 500;
   box-shadow: 0 10px 0 0 rgba(0, 0, 0, 0.233);

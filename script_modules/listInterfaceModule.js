@@ -36,7 +36,9 @@ class ListInterface {
     const html = this.results
       .map((el, index) => this._generateMarkup(el, index))
       .join("");
-    this._parentElement.innerHTML = html;
+
+    if (!this.results.length) this._parentElement.innerHTML = this._message;
+    else this._parentElement.innerHTML = html;
   }
 
   hideList() {
@@ -49,7 +51,7 @@ class ListInterface {
 
   _generateMarkup(country, index) {
     return `
-    <li class="search-list-country ${index === this.selectedIndex ? "selected" : ""}"data-index${index} data-country="${country.name}">
+    <li class="search-list-country${index === this.selectedIndex ? " selected" : ""}" data-index="${index}" data-country="${country.name}">
       <p>${country.name}</p>
       <figure>
       <img
