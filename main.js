@@ -118,6 +118,7 @@ const controlFinalizeGame = function () {
   toggleStateIsPlaying();
   DOM.input.value = "";
   ListInterface.clearMarkup();
+  mapModule.setMapToOverview();
 
   // gameover feedback (needs to be after toggleStateIsPlaying)
   console.log(state.isPlaying, state.gameResult);

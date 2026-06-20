@@ -5,6 +5,8 @@ export const config = Object.freeze({
   PLAYER_WRONG_MAX: 10,
   PLAYER_CORRECT_MAX: 10,
   POINTS_INIT_VALUE: 0,
+  DEFAULT_LAT: 39, // for centering the world map
+  DEFAULT_LNG: 22,
 });
 
 export const RESULT = Object.freeze({

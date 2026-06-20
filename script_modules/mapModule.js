@@ -1,6 +1,6 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { RESULT } from "../config";
+import { config, RESULT } from "../config";
 
 import blueIconUrl from "../img/marker-icon-2x-blue.png";
 import redIconUrl from "../img/marker-icon-2x-red.png";
@@ -44,7 +44,12 @@ class MapInterface {
     shadowSize: [41, 41],
   });
 
-  renderGameMap(geoData, lat = 0, lng = 0, lastRound = null) {
+  renderGameMap(
+    geoData,
+    lat = config.DEFAULT_LAT,
+    lng = config.DEFAULT_LNG,
+    lastRound = null,
+  ) {
     if (!this._map) {
       this._map = L.map("map", {
         maxBounds: [
@@ -147,6 +152,13 @@ class MapInterface {
 
     this._polylines = [];
     this._polyline = null;
+  }
+
+  setMapToOverview() {
+    //simple method to set the map to the same view settings as when initiated
+    this._map.flyTo([config.DEFAULT_LAT, config.DEFAULT_LNG], 3, {
+      duration: 1,
+    });
   }
 }
 
