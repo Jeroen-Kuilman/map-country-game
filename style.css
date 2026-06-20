@@ -32,10 +32,6 @@ body {
   color: var(--text-color-dark);
 }
 
-ul {
-  list-style: none;
-}
-
 /* voor leaflet later */
 img {
   max-width: 100%;
@@ -107,6 +103,10 @@ input {
   display: flex;
   flex-direction: column;
   position: relative;
+}
+
+.search-list-ul {
+  list-style: none;
 }
 
 .search-list {
@@ -188,4 +188,9 @@ input {
 
   z-index: 499;
   box-shadow: 0 -14px 0 rgba(0, 0, 0, 0.233);
+}
+
+.controls-instruction-container {
+  display: none;
+  grid-template-columns: 300px 1fr;
 }

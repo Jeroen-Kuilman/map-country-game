@@ -3,12 +3,12 @@ import {
   state,
   toggleStateIsPlaying,
   resetState,
-  getRandomCountryIndex,
   createCurrentCountryObject,
   fetchCountryAPI,
   fetchGeoData,
   updateGameState,
   updateRoundHistory,
+  shuffleStateCountriesArray,
 } from "./script_modules/appModule";
 import MapInterface from "./script_modules/mapModule";
 import ListInterface from "./script_modules/listInterfaceModule";
@@ -20,7 +20,7 @@ const DOM = {
   searchList: document.querySelector(".search-list"),
   startButton: document.querySelector(".btn-start"),
   input: document.querySelector("#country-search"),
-  feedbackMessage: document.querySelector(".instructions-title"),
+  feedbackMessage: document.querySelector(".feedback-title"),
 };
 
 const controlGame = function () {
@@ -31,7 +31,7 @@ const controlGame = function () {
     state.playerWrongPoints,
   );
   mapModule.clearMapUI();
-
+  shuffleStateCountriesArray();
   // control round (once)
   controlSetupRound();
   // initial isPlaying feedback
@@ -43,8 +43,11 @@ const controlSetupRound = function () {
   DOM.input.value = "";
   ListInterface.hideList();
 
-  const countryIndex = getRandomCountryIndex(state.countries);
-  const current = createCurrentCountryObject(state.countries, countryIndex);
+  const country = state.shuffledCountries[state.currentCountryIndex];
+  const current = createCurrentCountryObject(country);
+
+  state.currentCountryIndex++;
+
   MapInterface.renderGameMap(
     state.geoData,
     current.lat,
@@ -103,15 +106,15 @@ const controlFeedback = function () {
   const feedback = (message) => (DOM.feedbackMessage.textContent = message);
   // default feedback
   if (!state.isPlaying && !state.gameResult)
-    return feedback(FEEDBACK_MESSAGE.SIDEBAR_DEFAULT);
+    return feedback(FEEDBACK_MESSAGE.DEFAULT);
   // has won feedback
   if (!state.isPlaying && state.gameResult === RESULT.WON)
-    return feedback(FEEDBACK_MESSAGE.SIDEBAR_GAMEOVER_WON);
+    return feedback(FEEDBACK_MESSAGE.GAMEOVER_WON);
   // has lost feedback
   if (!state.isPlaying && state.gameResult === RESULT.LOST)
-    return feedback(FEEDBACK_MESSAGE.SIDEBAR_GAMEOVER_LOST);
+    return feedback(FEEDBACK_MESSAGE.GAMEOVER_LOST);
   // is playing feedback
-  if (state.isPlaying) return feedback(FEEDBACK_MESSAGE.SIDEBAR_ISPLAYING);
+  if (state.isPlaying) return feedback(FEEDBACK_MESSAGE.ISPLAYING);
 };
 
 const controlFinalizeGame = function () {
@@ -121,7 +124,6 @@ const controlFinalizeGame = function () {
   mapModule.setMapToOverview();
 
   // gameover feedback (needs to be after toggleStateIsPlaying)
-  console.log(state.isPlaying, state.gameResult);
   controlFeedback();
 };
 

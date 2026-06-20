@@ -2,6 +2,8 @@ import { config, RESULT } from "./../config.js";
 
 export const state = {
   countries: [],
+  shuffledCountries: [],
+  currentCountryIndex: null,
   currentCountry: {},
   isInitialized: false,
   roundResult: null,
@@ -14,17 +16,15 @@ export const state = {
   gameResult: null,
 };
 
-export const createCurrentCountryObject = function (data, randNum) {
-  const index = randNum;
-  const currentCountry = data[index];
+export const createCurrentCountryObject = function (country) {
   state.currentCountry = {
-    name: currentCountry.name,
-    flag: currentCountry.flag,
-    population: currentCountry.population,
-    lat: +currentCountry.lat,
-    lng: +currentCountry.lng,
-    index: index, // possible future use
+    name: country.name,
+    flag: country.flag,
+    population: country.population,
+    lat: +country.lat,
+    lng: +country.lng,
   };
+
   return state.currentCountry;
 };
 
@@ -47,9 +47,21 @@ export const toggleStateIsPlaying = function () {
   state.isPlaying = !state.isPlaying;
 };
 
-export const getRandomCountryIndex = function (data) {
-  // create a random number which will be based on the total amount of countries (data)
-  return Math.floor(Math.random() * data.length);
+// export const getRandomCountryIndex = function (data) {
+//   // create a random number which will be based on the total amount of countries (data)
+//   return Math.floor(Math.random() * data.length);
+// };
+
+export const shuffleStateCountriesArray = function () {
+  const arr = [...state.countries];
+
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+
+  state.shuffledCountries = arr;
+  state.currentCountryIndex = 0;
 };
 
 export const fetchCountryAPI = async function () {

@@ -17,8 +17,8 @@ export const RESULT = Object.freeze({
 });
 
 export const FEEDBACK_MESSAGE = Object.freeze({
-  SIDEBAR_DEFAULT: `Press start to play`,
-  SIDEBAR_ISPLAYING: `Let's see how many countries you know`,
-  SIDEBAR_GAMEOVER_WON: `You won! Check your answers on the map or press start to play again`,
-  SIDEBAR_GAMEOVER_LOST: `You lost... Check your answers on the map or press start to play again`,
+  DEFAULT: `Press start to play`,
+  ISPLAYING: `Let's see how many countries you know`,
+  GAMEOVER_WON: `You won! Check your answers on the map or press start to play again`,
+  GAMEOVER_LOST: `You lost... Check your answers on the map or press start to play again`,
 });

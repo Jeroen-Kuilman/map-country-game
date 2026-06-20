@@ -20,12 +20,14 @@
     <div class="main-container">
       <header class="header">
         <h1>Guess the country!</h1>
+
+        <h2 class="feedback-title">Press start to play</h2>
+
         <button class="btn btn-start" type="button">START</button>
       </header>
 
       <section class="content-container">
         <aside class="sidebar">
-          <h2 class="instructions-title">Press start to play</h2>
           <div class="search-box">
             <label for="country-search"
               >Guess the country you think the marker has landed in:</label
@@ -37,7 +39,7 @@
               placeholder="press Enter to confirm"
             />
             <div class="search-list hidden">
-              <ul>
+              <ul class="search-list-ul">
                 <!-- <li class="search-list-country">
                   <p>Hungary</p>
                   <figure>
@@ -97,9 +99,23 @@
       </section>
 
       <footer class="footer">
-        <h2>Game rules:</h2>
-        <p>Guess 10 times right, you win!</p>
-        <p>Guess 10 times wrong, you lose</p>
+        <h2>Controls:</h2>
+        <div class="controls-instruction-container">
+          <h3>UX-features</h3>
+          <ul>
+            <li>
+              <p>press Tab to autocomplete input without confirming answer</p>
+            </li>
+            <li><p>press Enter to autocomplete input and confirm answer</p></li>
+            <li>
+              <p>
+                click on a country in the list to autocomplete input and confirm
+                answer
+              </p>
+            </li>
+            <li><p>use arrow keys to navigate list WIP</p></li>
+          </ul>
+        </div>
       </footer>
     </div>
   </body>
