@@ -61,26 +61,26 @@ const controlSetupRound = function () {
   }
 };
 
-const controlFinalizeRound = function () {
-  const answer =
-    DOM.input.value.toLowerCase() === state.currentCountry.name.toLowerCase();
-
+const controlFinalizeRound = function (answer) {
+  console.log(answer);
+  const checkAnswer = answer === state.currentCountry.name;
   if (state.isProcessing) return;
-  const checkResult = updateGameState(answer);
+  const checkGameEnd = updateGameState(checkAnswer);
 
-  controlApplyRoundResult();
+  controlApplyRoundResult(answer, checkAnswer);
 
   // timeout to visualize the answer before going to the next round
   state.isProcessing = true;
   setTimeout(() => {
-    if (!checkResult) controlSetupRound();
+    if (!checkGameEnd) controlSetupRound();
     else controlFinalizeGame();
 
     state.isProcessing = false;
   }, config.UPDATE_ROUND_SECONDS * 1000);
 };
 
-const controlApplyRoundResult = function () {
+const controlApplyRoundResult = function (answer, checkAnswer) {
+  const wrongAnswerOfPlayer = !checkAnswer ? answer : null;
   updateRoundHistory(
     state.roundResult,
     state.currentCountry.lat,
@@ -95,10 +95,12 @@ const controlApplyRoundResult = function () {
 
   // apply new marker color
   const roundIndex = state.rounds.length - 1;
+
   MapInterface.setMarkerResult(
     roundIndex,
     state.roundResult,
     state.currentCountry.name,
+    wrongAnswerOfPlayer,
   );
 };
 
@@ -130,12 +132,13 @@ const controlFinalizeGame = function () {
 const controlInputConfirm = function (e) {
   if (!ListInterface.results.length) return;
 
-  // find better alternative for this check
   if (!DOM.searchList.classList.contains("hidden")) {
     if (e.type === "keydown")
       // Making sure the final answer will ALWAYS match with an existing country.
       DOM.input.value = ListInterface.results[0].name;
-    controlFinalizeRound();
+
+    const answer = DOM.input.value;
+    controlFinalizeRound(answer);
   }
 };
 

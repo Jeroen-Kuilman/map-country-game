@@ -56,7 +56,7 @@ class MapInterface {
           [-90, -180], // southwest corner
           [90, 180], // northeast corner
         ],
-        maxBoundsViscosity: 1.0, // 1.0 = solid wall, can't drag past it at all
+        maxBoundsViscosity: 0.85,
       }).setView([lat, lng], 3);
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
@@ -111,16 +111,28 @@ class MapInterface {
     }).addTo(this._map);
   }
 
-  setMarkerResult(index, result, country) {
+  setMarkerResult(index, result, country, playerAnswer) {
     const marker = this._markers[index];
     if (!marker) return;
-    marker.bindPopup(country).openPopup();
-    marker.on("mouseover", function (e) {
-      this.openPopup();
-    });
-    marker.on("mouseout", function (e) {
-      this.closePopup();
-    });
+
+    const popupClass = playerAnswer ? "popup-wrong" : "popup-correct";
+    const popupString = playerAnswer
+      ? `<div>Your answer: ${playerAnswer}<br>Correct answer: ${country}</div>`
+      : `<div>${country}</div>`;
+
+    marker
+      .bindPopup(popupString, {
+        className: popupClass,
+        autoPan: true,
+        autoPanPadding: [40, 40],
+      })
+      .openPopup();
+    // marker.on("mouseover", function (e) {
+    //   this.openPopup();
+    // });
+    // marker.on("mouseout", function (e) {
+    //   this.closePopup();
+    // });
 
     if (result === RESULT.CORRECT) {
       marker.setIcon(this._greenIcon);
@@ -131,7 +143,7 @@ class MapInterface {
 
   addPolyLine(lastTwoCoords, result) {
     const polyline = L.polyline(lastTwoCoords, {
-      color: `${result === RESULT.CORRECT ? "green" : "red"}`,
+      color: `${result === RESULT.CORRECT ? "#2AAD27" : "#CB2B3E"}`,
       weight: 2,
       opacity: 60,
       dashArray: "5, 10",
