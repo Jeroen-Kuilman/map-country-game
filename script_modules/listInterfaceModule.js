@@ -23,12 +23,6 @@ class ListInterface {
 
     this.selectedIndex = -1;
     this._renderList();
-
-    // if (!this.results.length)
-    //   return (this._parentElement.innerHTML = this._message);
-
-    // const markup = this.results.map((el) => this._generateMarkup(el)).join("");
-    // this._parentElement.innerHTML = markup;
   }
 
   _generateSearchResults(data, query) {

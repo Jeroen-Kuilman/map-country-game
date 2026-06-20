@@ -127,36 +127,10 @@ const controlFinalizeGame = function () {
   // gameover feedback (needs to be after toggleStateIsPlaying)
   controlFeedback();
 };
-
-// const controlInputConfirm = function (e) {
-//   if (!ListInterface.results.length) return;
-
-//   if (!DOM.searchList.classList.contains("hidden")) {
-//     if (e.type === "keydown")
-//       // Making sure the final answer will ALWAYS match with an existing country.
-//       DOM.input.value = ListInterface.results[0].name;
-
-//     const answer = DOM.input.value;
-//     controlFinalizeRound(answer);
-//   }
-// };
-
 const controlList = function (e) {
   const query = e.target.value.toLowerCase();
   ListInterface.renderMarkup(state.countries, query);
 };
-
-// const controlListAutoCompleteClick = function (e) {
-//   const item = e.target.closest(".search-list-country");
-//   if (!item) return;
-//   DOM.input.value = item.dataset.country;
-// };
-
-// const controlListAutoCompleteTab = function (e) {
-//   if (!ListInterface.results.length) return;
-//   e.preventDefault();
-//   DOM.input.value = ListInterface.results[0].name;
-// };
 
 const initEventListeners = function () {
   DOM.input.addEventListener("input", function (e) {

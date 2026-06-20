@@ -152,6 +152,11 @@ h1 {
   font-weight: bold;
 }
 
+.leaflet-popup-close-button {
+  font-weight: 600 !important;
+  color: var(--text-color-light) !important;
+}
+
 .sidebar {
   background-color: var(--second-color);
   display: flex;
