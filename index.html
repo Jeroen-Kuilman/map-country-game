@@ -14,8 +14,8 @@
     />
 
 
-    <script type="module" crossorigin src="/map-country-game/assets/index-BMjQ-A_T.js"></script>
-    <link rel="stylesheet" crossorigin href="/map-country-game/assets/index-_ancd1rQ.css">
+    <script type="module" crossorigin src="/map-country-game/assets/index-DIEi3cqB.js"></script>
+    <link rel="stylesheet" crossorigin href="/map-country-game/assets/index-qtZN8M5-.css">
   </head>
   <body>
     <div class="main-container">
@@ -26,25 +26,26 @@
         </div>
 
         <h2 class="feedback-title">Press start to play</h2>
-
-        <button class="btn btn-start" type="button">START</button>
       </header>
 
       <section class="content-container">
         <aside class="sidebar">
-          <div class="search-box">
-            <label for="country-search"
-              >Guess the country you think the marker has landed in:</label
+          <div class="search-box sidebar-section">
+            <h2 class="section-header">Search</h2>
+
+            <label for="country-search-input" class="country-search-label"
+              >Type here:</label
             >
-            <input
-              type="search"
-              id="country-search"
-              name="guess-searchbar"
-              placeholder="press Enter to confirm"
-            />
-            <div class="search-list hidden">
-              <ul class="search-list-ul">
-                <!-- <li class="search-list-country">
+            <div class="search-input-wrapper">
+              <input
+                type="search"
+                id="country-search-input"
+                name="guess-searchbar"
+                placeholder="press Enter to confirm"
+              />
+              <div class="search-list hidden">
+                <ul class="search-list-ul">
+                  <!-- <li class="search-list-country">
                   <p>Hungary</p>
                   <figure>
                     <img
@@ -84,16 +85,21 @@
                     />
                   </figure>
                 </li> -->
-              </ul>
+                </ul>
+              </div>
             </div>
           </div>
 
-          <div class="stats-container">
-            <h2>Stats</h2>
-            <h3>Right answers: <span class="right-counter"></span></h3>
+          <div class="stats-container sidebar-section">
+            <h2 class="stats-header section-header">Stats</h2>
+            <h3 class="counter-title">
+              Right answers: <span class="right-counter"></span>
+            </h3>
             <div class="stat-group right-answers-display"></div>
 
-            <h3>Wrong answers: <span class="wrong-counter"></span></h3>
+            <h3 class="counter-title">
+              Wrong answers: <span class="wrong-counter"></span>
+            </h3>
             <div class="stat-group wrong-answers-display"></div>
           </div>
         </aside>
@@ -101,24 +107,37 @@
           <div id="map"></div>
         </main>
       </section>
-
-      <footer class="footer">
-        <h2>Controls:</h2>
-        <div class="controls-instruction-container">
-          <h3>UX-features</h3>
-          <ul>
-            <li>
-              <p>press Tab to autocomplete input without confirming answer</p>
+      <section class="modal hidden">
+        <div class="info-list">
+          <h2>UX-features:</h2>
+          <ul class="info-list-ul">
+            <li class="info-list-li">
+              <p>Press Tab to cycle through the list of countries;</p>
             </li>
-            <li><p>press Enter to autocomplete input and confirm answer</p></li>
-            <li>
+            <li class="info-list-li">
+              <p>Press Enter to autocomplete input and confirm answer;</p>
+            </li>
+            <li class="info-list-li">
               <p>
-                click on a country in the list to autocomplete input and confirm
-                answer
+                Click on a country in the list to autocomplete input and confirm
+                answer;
               </p>
             </li>
-            <li><p>use arrow keys to navigate list WIP</p></li>
+            <li class="info-list-li">
+              <p>
+                Click on the markers to compare your answer to the correct
+                answer.
+              </p>
+            </li>
           </ul>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="error-container hidden"></div>
+        <div class="button-container">
+          <button class="btn btn-start" type="button">START</button>
+          <button class="btn btn-info" type="button">INFO</button>
         </div>
       </footer>
     </div>
