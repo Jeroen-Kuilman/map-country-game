@@ -37,7 +37,7 @@ class StatsInterface {
     this._rightContainer.innerHTML = "";
     this._wrongContainer.innerHTML = "";
 
-    this._rightCounter.textContent = `${rightDefault} / ${config.PLAYER_WRONG_MAX}`;
+    this._rightCounter.textContent = `${rightDefault} / ${config.PLAYER_CORRECT_MAX}`;
     this._wrongCounter.textContent = `${wrongDefault} / ${config.PLAYER_WRONG_MAX}`;
   }
 }

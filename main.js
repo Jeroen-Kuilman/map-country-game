@@ -10,10 +10,9 @@ import {
   updateRoundHistory,
   shuffleStateCountriesArray,
 } from "./script_modules/appModule";
-import MapInterface from "./script_modules/mapModule";
+import MapInterface from "./script_modules/mapModule.js";
 import ListInterface from "./script_modules/listInterfaceModule";
 import StatsInterface from "./script_modules/statsInterfaceModule.js";
-// removed duplicate imports: use `MapInterface` for map actions and `StatsInterface` for stats
 
 const DOM = {
   searchList: document.querySelector(".search-list"),
@@ -22,6 +21,7 @@ const DOM = {
   input: document.querySelector("#country-search-input"),
   feedbackMessage: document.querySelector(".feedback-title"),
   modal: document.querySelector(".modal"),
+  errorContainer: document.querySelector(".error-container"),
 };
 
 const controlGame = function () {
@@ -146,6 +146,7 @@ const controlFinalizeGame = function () {
   // gameover feedback (needs to be after toggleStateIsPlaying)
   controlFeedback();
 };
+
 const controlList = function (e) {
   const query = e.target.value.toLowerCase();
   ListInterface.renderMarkup(state.countries, query);
@@ -162,11 +163,8 @@ const initEventListeners = function () {
     if (state.isPlaying) {
       const item = e.target.closest(".search-list-country");
       if (!item) return;
-
       const index = Number(item.dataset.index);
-
       ListInterface.setSelectedByIndex(index);
-
       DOM.input.value = item.dataset.country;
 
       controlFinalizeRound(DOM.input.value);
@@ -178,7 +176,7 @@ const initEventListeners = function () {
       if (e.key === "Tab") {
         e.preventDefault();
         //guard to prevent accidental cycling to a closed list
-        if (!DOM.input.value) return;
+        if (!DOM.input.value || !ListInterface.results.length) return;
 
         const next = ListInterface.selectNext();
 
@@ -188,7 +186,7 @@ const initEventListeners = function () {
       }
       if (e.key === "Enter") {
         //guard to prevent accidental autoconfirm from a closed list
-        if (!DOM.input.value) return;
+        if (!DOM.input.value || !ListInterface.results.length) return;
         const selected = ListInterface.getSelectedName();
 
         const value = selected || ListInterface.results[0]?.name;
@@ -202,6 +200,7 @@ const initEventListeners = function () {
   });
 
   DOM.startButton.addEventListener("click", function () {
+    if (state.isProcessing) return;
     if (!state.isPlaying) {
       toggleStateIsPlaying();
       controlGame(); // start of a new game
@@ -210,6 +209,12 @@ const initEventListeners = function () {
     }
     if (state.isPlaying) {
       controlFinalizeGame();
+      resetState();
+      MapInterface.clearMapUI();
+      StatsInterface.clearMarkup(
+        state.playerCorrectPoints,
+        state.playerWrongPoints,
+      );
       return;
     }
   });
@@ -240,6 +245,8 @@ const init = async function () {
     initEventListeners();
   } catch (err) {
     console.error(err);
+    DOM.errorContainer.innerHTML = `Whoops, something went wrong: ${err.message || err}`;
+    DOM.errorContainer.classList.remove("hidden");
   }
 };
 

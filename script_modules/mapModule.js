@@ -127,12 +127,6 @@ class MapInterface {
         autoPanPadding: [40, 40],
       })
       .openPopup();
-    // marker.on("mouseover", function (e) {
-    //   this.openPopup();
-    // });
-    // marker.on("mouseout", function (e) {
-    //   this.closePopup();
-    // });
 
     if (result === RESULT.CORRECT) {
       marker.setIcon(this._greenIcon);

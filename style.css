@@ -11,6 +11,9 @@
   --third-color: #b6cdbd;
   --fourth-color: #5c715e;
 
+  --correct-color: #2aad27;
+  --wrong-color: #cb2b3e;
+
   --text-color-light: #ffffff;
   --text-color-dark: #444;
 }
@@ -162,19 +165,19 @@ p {
 }
 
 .popup-correct .leaflet-popup-content-wrapper {
-  background-color: #2aad27;
+  background-color: var(--correct-color);
 }
 
 .popup-wrong .leaflet-popup-content-wrapper {
-  background-color: #cb2b3e;
+  background-color: var(--wrong-color);
 }
 
 .popup-correct .leaflet-popup-tip {
-  background: #2aad27;
+  background: var(--correct-color);
 }
 
 .popup-wrong .leaflet-popup-tip {
-  background: #cb2b3e;
+  background: var(--wrong-color);
 }
 
 .leaflet-popup-content {
@@ -402,52 +405,10 @@ p {
   z-index: 499;
 }
 
-/* responsive (will add later)*/
-
-/* @media (max-width: 120rem) {
-  body {
-    padding: 0;
-    margin: 0;
-  }
-
-  html,
-  body,
-  #map {
-    height: 100vh;
-    width: 100vw;
-  }
-
-  .sidebar {
-    
-  }
-} */
-
-/* @media (max-width: 60rem) {
-  body {
-    padding: 0;
-    margin: 0;
-  }
-
-  html,
-  body,
-  #map {
-    height: 100vh;
-    width: 100vw;
-  }
-  .content-container {
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: clamp(22rem, 25%, 30rem) 1fr;
-  }
-
-  .sidebar {
-    grid-row: 1/-1;
-  }
-} */
-
-/* @media (max-width: 76.8rem) {
-  .btn{
-    min-width: 12rem;
-    padding: 0 2.5remx;
-  }
-} */
+.error-container {
+  font-size: 1.8rem;
+  color: var(--wrong-color);
+  font-weight: 600;
+  padding: 0.2rem 1rem;
+  background-color: var(--text-color-light);
+}

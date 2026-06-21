@@ -1,0 +1,49 @@
+/* responsive (will add later)*/
+
+/* @media (max-width: 120rem) {
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  html,
+  body,
+  #map {
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .sidebar {
+    
+  }
+} */
+
+/* @media (max-width: 60rem) {
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  html,
+  body,
+  #map {
+    height: 100vh;
+    width: 100vw;
+  }
+  .content-container {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: clamp(22rem, 25%, 30rem) 1fr;
+  }
+
+  .sidebar {
+    grid-row: 1/-1;
+  }
+} */
+
+/* @media (max-width: 76.8rem) {
+  .btn{
+    min-width: 12rem;
+    padding: 0 2.5remx;
+  }
+} */

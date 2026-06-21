@@ -78,9 +78,11 @@ export const fetchCountryAPI = async function () {
         fetch("https://countriesnow.space/api/v0.1/countries/population"),
       ],
     );
+    if (!countryInfoRes.ok && !countryCoordsRes.ok && !countryPopRes.ok)
+      throw new Error(`Fetch country API completely failed`);
 
     if (!countryInfoRes.ok || !countryCoordsRes.ok || !countryPopRes.ok)
-      throw new Error(`Fetch country API failed`);
+      throw new Error(`Fetch country API partially failed`);
 
     const [countryInfoData, countryCoordsData, countryPopData] =
       await Promise.all([
@@ -117,7 +119,7 @@ export const fetchCountryAPI = async function () {
 
     return countriesMerged;
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
@@ -132,7 +134,7 @@ export const fetchGeoData = async function () {
 
     return geoData;
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
