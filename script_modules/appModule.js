@@ -36,6 +36,9 @@ const createInitialStateObject = function () {
     roundResult: null,
     isProcessing: false,
     rounds: [],
+    gameResult: null,
+    shuffledCountries: [],
+    currentCountryIndex: null,
   };
 };
 

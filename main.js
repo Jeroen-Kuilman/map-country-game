@@ -18,8 +18,10 @@ import StatsInterface from "./script_modules/statsInterfaceModule.js";
 const DOM = {
   searchList: document.querySelector(".search-list"),
   startButton: document.querySelector(".btn-start"),
-  input: document.querySelector("#country-search"),
+  infoButton: document.querySelector(".btn-info"),
+  input: document.querySelector("#country-search-input"),
   feedbackMessage: document.querySelector(".feedback-title"),
+  modal: document.querySelector(".modal"),
 };
 
 const controlGame = function () {
@@ -61,7 +63,6 @@ const controlSetupRound = function () {
 };
 
 const controlFinalizeRound = function (answer) {
-  console.log(answer);
   const checkAnswer = answer === state.currentCountry.name;
   if (state.isProcessing) return;
   const checkGameEnd = updateGameState(checkAnswer);
@@ -106,16 +107,32 @@ const controlApplyRoundResult = function (answer, checkAnswer) {
 const controlFeedback = function () {
   const feedback = (message) => (DOM.feedbackMessage.textContent = message);
   // default feedback
-  if (!state.isPlaying && !state.gameResult)
-    return feedback(FEEDBACK_MESSAGE.DEFAULT);
+  if (!state.isPlaying && !state.gameResult) {
+    feedback(FEEDBACK_MESSAGE.DEFAULT);
+    DOM.startButton.textContent = "START";
+    return;
+  }
+
   // has won feedback
-  if (!state.isPlaying && state.gameResult === RESULT.WON)
-    return feedback(FEEDBACK_MESSAGE.GAMEOVER_WON);
+  if (!state.isPlaying && state.gameResult === RESULT.WON) {
+    feedback(FEEDBACK_MESSAGE.GAMEOVER_WON);
+    DOM.startButton.textContent = "START";
+    return;
+  }
+
   // has lost feedback
-  if (!state.isPlaying && state.gameResult === RESULT.LOST)
-    return feedback(FEEDBACK_MESSAGE.GAMEOVER_LOST);
+  if (!state.isPlaying && state.gameResult === RESULT.LOST) {
+    feedback(FEEDBACK_MESSAGE.GAMEOVER_LOST);
+    DOM.startButton.textContent = "START";
+    return;
+  }
+
   // is playing feedback
-  if (state.isPlaying) return feedback(FEEDBACK_MESSAGE.ISPLAYING);
+  if (state.isPlaying) {
+    feedback(FEEDBACK_MESSAGE.ISPLAYING);
+    DOM.startButton.textContent = "RESET";
+    return;
+  }
 };
 
 const controlFinalizeGame = function () {
@@ -123,6 +140,8 @@ const controlFinalizeGame = function () {
   DOM.input.value = "";
   ListInterface.clearMarkup();
   MapInterface.setMapToOverview();
+
+  DOM.startButton.classList.remove("active");
 
   // gameover feedback (needs to be after toggleStateIsPlaying)
   controlFeedback();
@@ -158,6 +177,9 @@ const initEventListeners = function () {
     if (state.isPlaying) {
       if (e.key === "Tab") {
         e.preventDefault();
+        //guard to prevent accidental cycling to a closed list
+        if (!DOM.input.value) return;
+
         const next = ListInterface.selectNext();
 
         if (next) {
@@ -165,10 +187,13 @@ const initEventListeners = function () {
         }
       }
       if (e.key === "Enter") {
+        //guard to prevent accidental autoconfirm from a closed list
+        if (!DOM.input.value) return;
         const selected = ListInterface.getSelectedName();
 
         const value = selected || ListInterface.results[0]?.name;
-
+        // to visualize the value chosen by the player
+        DOM.input.value = value;
         if (value) {
           controlFinalizeRound(value);
         }
@@ -180,7 +205,18 @@ const initEventListeners = function () {
     if (!state.isPlaying) {
       toggleStateIsPlaying();
       controlGame(); // start of a new game
+      DOM.startButton.classList.add("active");
+      return;
     }
+    if (state.isPlaying) {
+      controlFinalizeGame();
+      return;
+    }
+  });
+
+  DOM.infoButton.addEventListener("click", function () {
+    DOM.modal.classList.toggle("hidden");
+    DOM.infoButton.classList.toggle("active");
   });
 };
 

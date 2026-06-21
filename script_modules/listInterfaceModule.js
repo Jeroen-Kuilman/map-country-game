@@ -5,7 +5,7 @@ class ListInterface {
   _parentElement = document.querySelector(".search-list");
   _data;
 
-  _message = "No matching countries found 🌍⁉️";
+  _message = "<p>No matching countries found 🌍⁉️</p>";
 
   results = [];
 
