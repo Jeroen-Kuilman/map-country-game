@@ -9,7 +9,7 @@ class ListInterface {
 
   results = [];
 
-  selectedIndex = -1; // reset in renderMarkup
+  selectedIndex = -1;
 
   renderMarkup(data, query) {
     this._data = data;

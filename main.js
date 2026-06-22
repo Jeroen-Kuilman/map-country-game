@@ -24,6 +24,37 @@ const DOM = {
   errorContainer: document.querySelector(".error-container"),
 };
 
+////////////////////////////////
+// page initialization
+///////////////////////////////
+const init = async function () {
+  try {
+    // fetch API data
+    if (!state.isInitialized) {
+      [state.countries, state.geoData] = await Promise.all([
+        fetchCountryAPI(),
+        fetchGeoData(),
+      ]);
+      state.isInitialized = true;
+    }
+
+    // initial feedback
+    controlFeedback();
+
+    // setup initial map
+    MapInterface.renderGameMap(state.geoData);
+
+    initEventListeners();
+  } catch (err) {
+    console.error(err);
+    DOM.errorContainer.innerHTML = `Whoops, something went wrong: ${err.message || err}`;
+    DOM.errorContainer.classList.remove("hidden");
+  }
+};
+
+////////////////////////////////
+// game initialization
+///////////////////////////////
 const controlGame = function () {
   // reset relevant state and UI parts
   resetState();
@@ -39,69 +70,9 @@ const controlGame = function () {
   controlFeedback();
 };
 
-const controlSetupRound = function () {
-  const previous = state.rounds.at(-1)?.markerCoords;
-  DOM.input.value = "";
-  ListInterface.hideList();
-
-  const country = state.shuffledCountries[state.currentCountryIndex];
-  const current = createCurrentCountryObject(country);
-
-  state.currentCountryIndex++;
-
-  MapInterface.renderGameMap(
-    state.geoData,
-    current.lat,
-    current.lng,
-    state.roundResult,
-  );
-
-  const newCoord = [current.lat, current.lng];
-  if (previous) {
-    MapInterface.addPolyLine([previous, newCoord], state.roundResult);
-  }
-};
-
-const controlFinalizeRound = function (answer) {
-  const checkAnswer = answer === state.currentCountry.name;
-  if (state.isProcessing) return;
-  const checkGameEnd = updateGameState(checkAnswer);
-
-  controlApplyRoundResult(answer, checkAnswer);
-
-  // timeout to visualize the answer before going to the next round
-  state.isProcessing = true;
-  setTimeout(() => {
-    if (!checkGameEnd) controlSetupRound();
-    else controlFinalizeGame();
-
-    state.isProcessing = false;
-  }, config.UPDATE_ROUND_SECONDS * 1000);
-};
-
-const controlApplyRoundResult = function (answer, checkAnswer) {
-  const wrongAnswerOfPlayer = !checkAnswer ? answer : null;
-  updateRoundHistory(
-    state.roundResult,
-    state.currentCountry.lat,
-    state.currentCountry.lng,
-  );
-
-  StatsInterface.renderMarkup(
-    state.roundResult,
-    state.playerCorrectPoints,
-    state.playerWrongPoints,
-  );
-
-  // apply new marker color
-  const roundIndex = state.rounds.length - 1;
-
-  MapInterface.setMarkerResult(
-    roundIndex,
-    state.roundResult,
-    state.currentCountry.name,
-    wrongAnswerOfPlayer,
-  );
+const controlList = function (e) {
+  const query = e.target.value.toLowerCase();
+  ListInterface.renderMarkup(state.countries, query);
 };
 
 const controlFeedback = function () {
@@ -135,6 +106,86 @@ const controlFeedback = function () {
   }
 };
 
+////////////////////////////////
+// round loop
+///////////////////////////////
+const controlSetupRound = function () {
+  const previous = state.rounds.at(-1)?.markerCoords;
+  DOM.input.value = "";
+  ListInterface.hideList();
+
+  const country = state.shuffledCountries[state.currentCountryIndex];
+  const current = createCurrentCountryObject(country);
+
+  state.currentCountryIndex++;
+
+  MapInterface.renderGameMap(
+    state.geoData,
+    current.lat,
+    current.lng,
+    state.roundResult,
+  );
+
+  const newCoord = [current.lat, current.lng];
+  if (previous) {
+    MapInterface.addPolyLine([previous, newCoord], state.roundResult);
+  }
+};
+
+/**
+ * function with the main purpose of checking whether end of game has been reached. If yes, controlFinalizeGame, if not next controlSetupRound.
+ * function gets called when player confirms input.
+ * @param {string} answer -Player input from DOM.input
+ */
+const controlFinalizeRound = function (answer) {
+  const checkAnswer = answer === state.currentCountry.name;
+  if (state.isProcessing) return;
+  const checkGameEnd = updateGameState(checkAnswer);
+
+  controlApplyRoundResult(answer, checkAnswer);
+
+  // timeout to visualize the answer before going to the next round
+  state.isProcessing = true;
+  setTimeout(() => {
+    if (!checkGameEnd) controlSetupRound();
+    else controlFinalizeGame();
+
+    state.isProcessing = false;
+  }, config.UPDATE_ROUND_SECONDS * 1000);
+};
+
+/**
+ * function is an extension of controlFinalizeRound, but with the focus on applying round results in state and UI.
+ * @param {string} answer -The player answer. Used in map popups.
+ * @param {boolean} checkAnswer -true or false.
+ */
+const controlApplyRoundResult = function (answer, checkAnswer) {
+  const wrongAnswerOfPlayer = !checkAnswer ? answer : null;
+  updateRoundHistory(
+    state.roundResult,
+    state.currentCountry.lat,
+    state.currentCountry.lng,
+  );
+
+  StatsInterface.renderMarkup(
+    state.roundResult,
+    state.playerCorrectPoints,
+    state.playerWrongPoints,
+  );
+
+  const roundIndex = state.rounds.length - 1;
+
+  MapInterface.setMarkerResult(
+    roundIndex,
+    state.roundResult,
+    state.currentCountry.name,
+    wrongAnswerOfPlayer,
+  );
+};
+
+////////////////////////////////
+// game finalization
+///////////////////////////////
 const controlFinalizeGame = function () {
   toggleStateIsPlaying();
   DOM.input.value = "";
@@ -147,11 +198,9 @@ const controlFinalizeGame = function () {
   controlFeedback();
 };
 
-const controlList = function (e) {
-  const query = e.target.value.toLowerCase();
-  ListInterface.renderMarkup(state.countries, query);
-};
-
+////////////////////////////////
+// event handlers
+///////////////////////////////
 const initEventListeners = function () {
   DOM.input.addEventListener("input", function (e) {
     if (state.isPlaying) {
@@ -223,31 +272,6 @@ const initEventListeners = function () {
     DOM.modal.classList.toggle("hidden");
     DOM.infoButton.classList.toggle("active");
   });
-};
-
-const init = async function () {
-  try {
-    // fetch API data
-    if (!state.isInitialized) {
-      [state.countries, state.geoData] = await Promise.all([
-        fetchCountryAPI(),
-        fetchGeoData(),
-      ]);
-      state.isInitialized = true;
-    }
-
-    // initial feedback
-    controlFeedback();
-
-    // setup initial map
-    MapInterface.renderGameMap(state.geoData); // temporary input (besides geoData)
-
-    initEventListeners();
-  } catch (err) {
-    console.error(err);
-    DOM.errorContainer.innerHTML = `Whoops, something went wrong: ${err.message || err}`;
-    DOM.errorContainer.classList.remove("hidden");
-  }
 };
 
 init();

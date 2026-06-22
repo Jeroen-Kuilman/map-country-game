@@ -44,6 +44,9 @@ class MapInterface {
     shadowSize: [41, 41],
   });
 
+  /**
+   * The game map either initializes or gets updated based on a previous map existing.
+   */
   renderGameMap(
     geoData,
     lat = config.DEFAULT_LAT,
