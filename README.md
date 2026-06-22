@@ -3,7 +3,7 @@
 A browser-based geography game built with vanilla JavaScript and Leaflet.js.
 Players must identify countries based on map markers, with real-time feedback and visual progression.
 
-![Gameplay screenshot](screenshot.png)
+![Gameplay screenshot](Screenshot.png)
 
 ## Live Demo
 
