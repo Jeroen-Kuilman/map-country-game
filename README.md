@@ -11,14 +11,21 @@ Players must identify countries based on map markers, with real-time feedback an
 
 ⚠️ Note: the game is not responsive (yet), so the game is not optimized for phones and tablets. In version 2.0 there will be a focus on responsiveness.
 
-## Tech Stack
+## Technical Overview
+
+### Tech Stack
 
 **JavaScript (ES6+)**
 
-- ES6 modules
-- classes with private fields
-- async/await
+- Modular architecture (controller + modules separation)
+- Classes with private fields
+- Async/await
 - Promise.all for parallel data fetching
+- Custom state management (centralized state object)
+- Event-driven UI updates
+- Game loop design & lifecycle handling
+- Keyboard navigation
+- Autocomplete functionality
 - The Fisher-Yates shuffle algorithm
 - JSDoc documentation
 
@@ -28,12 +35,13 @@ Players must identify countries based on map markers, with real-time feedback an
 - Custom marker icons
 - GeoJSON country borders
 - Dynamic popups
-- polylines
-- programmatic camera control
+- Polylines
+- Programmatic camera control
 
 **REST APIs**
 
 - Three parallel external data sources merged and cross-referenced (country info, coordinates, population)
+- Filters applied to guard against incomplete data
 - GeoJSON border dataset
 
 **CSS3**
@@ -68,58 +76,134 @@ Players must identify countries based on map markers, with real-time feedback an
 
 - Version control with conventional commit messages
 
-## Architecture
+### Gameplay and Features:
 
-## Key-challenges
+To start the game, click ‘Start’ and the game will generate a round in which you must name the country indicated by the marker. The game ends when you have either 10 correct answers or 10 incorrect answers. Type your answer in the field at the top left. There are several ways to confirm your answer and to navigate the list.
 
-## Nederlandse versie (ENGLISH VERSION BELOW)
+- To use autocomplete:
+  - Use the Tab key to cycle through the list, and press Enter to confirm.
+  - If the answer you want to give is the first option in the list, press Enter and your answer will be entered and confirmed immediately.
+  - You can also select an option from the list using the mouse. The answer will be confirmed automatically.
+  - Can’t remember? Click the info button.
 
-### Spelregels en features:
+- Map features:
+  - Markers change colour depending on whether the answer is correct or incorrect.
+  - Polylines (lines between markers) are added, with dynamic colouring, so that the progress of the game can be visually tracked.
+  - Markers (excluding the blue ones) have pop-ups. To open one, click on a marker. Green markers show only the correct answer. Red markers show both the incorrect answer you gave and the correct answer.
 
-Om het spel te beginnen, klik op start en het spel genereert een ronde waarin je het door de marker aangewezen land moet benoemen. Het spel eindigt wanneer je of 10 goede antwoorden hebt, of 10 foute antwoorden. Type je antwoord in het veld linksbovenin. Er zijn verschillende manieren om je antwoord te bevestigen en om de bijbehorende lijst te navigeren.
+- Other features:
+  - Feedback in the top right-hand corner based on the game state.
+  - The START button changes to a RESET button when the game is active, and changes back to a START button once the game is complete.
+  - An error message appears if one or more of the API fetches fail.
 
-- Om gebruik te maken van de autocomplete:
-  - Gebruik Tab om te navigeren door de lijst, en klik Enter om de lijstoptie te bevestigen.
-  - Als het antwoord dat je wilt geven de eerste optie van de lijst is, klik Enter en je antwoord wordt direct ingevuld en bevestigd.
-  - Je kan ook met de muis een optie uit de lijst selecteren. Het antwoord wordt automatisch bevestigd.
-  - Weet je het niet meer? Klik op de info knop.
+### Architecture
 
-- Kaart features:
-  - Markers kleuren aan de hand van een goed of fout antwoord.
-  - Polylines (lijnen tussen markers) worden toegevoegd, met dynamische kleuring, zodat het verloop van het spel visueel getraced kan worden.
-  - Markers (niet de blauwe) hebben popups. Om te openen, klik op een marker. Groene markers geven alleen het correcte antwoord. Rode markers geven het foute gegeven antwoord en het correcte antwoord.
+The app follows a modular structure based on the MVC-architecture, but implemented in a non-strict way. This allowed me to leverage the useful parts of the pattern, without overdoing it for the sake of having an architectural pattern.
 
-- Overige features:
-  - Feedback rechtsbovenin op basis van de game state.
-  - De START knop, verandert in een RESET knop wanneer het spel actief is, en verandert terug naar een START knop als het spel afgerond is.
-  - Error-bericht wanneer de API fetches falen.
+- **appModule** - state & game logic
+- **main (controller)** - page initialization, orchestration & game flow
+- **UI modules** - map, list, and stats interfaces
+- **config**
 
-### Mijn motivatie, leerervaringen en verantwoording:
+This separation allowed for better control and scalability.
 
-Dit was voor mij het tweede project dat ik zelfstandig bouwde in HTML/CSS en JavaScript. De aanleiding van dit project, was de afronding van mijn JavaScript cursus. Ik had veel nieuwe theoretische kennis meegekregen, en ik vond dat het tijd was om dat in de praktijk toe te passen. Dit project had een aanzienlijk grotere scope dan mijn vorige project, zeker aangezien mijn intentie al heel vroeg was om gebruik te maken van een externe library en een API, en dus was er iets vereist wat ik in mijn vorige project had nagelaten: een planning. Ik had de core van wat mijn spel moest zijn al in mijn hoofd zitten, dus ik begon dus met het opstellen van wat eenvoudige user-stories, van een flowchart, het creëren van een simpele mockup, en een splitsing te maken voor welke modules verantwoordelijk moesten zijn voor welke code. Dit is de kern geweest voor dit project, en is ook de reden dat ik tevreden terug kan kijken op het resultaat tot nu toe. Het grootste compliment dat ik mezelf kan geven is dat het uiteindelijke resultaat grotendeels overeenkomt met de oorspronkelijke flowchart. Ik had een resultaat in mijn hoofd, en ik heb dat resultaat gemaakt.
+### Key Challenges
+
+- Setting up a strong planning phase
+- Designing a consistent game loop across multiple modules
+- Managing shared state without a framework
+- Synchronizing UI updates with asynchronous operations
+- Creating consistent, guarded behavior in the list UI
+- Designing a UX-focused autocomplete feature for the input field
+
+### Models
 
 ![Flowchart](./Models/Flowchart%20guess%20country%20game-version1.drawio.png)
-
-Toch was het niet zonder tegenslagen. Ik had halverwege toch nog best moeite om mijn code over verschillende modules te volgen. Oorspronkelijk had ik het idee om met een MVC (module-view-controller) architectuur te werken, maar dat liet ik al snel gedurende mijn planning los. In plaats daarvan, werd het een lossere variant ervan. Niet: het MOET MVC, maar: hoe kan MVC me eventueel op bepaalde plekken helpen? En dat werkte grotendeels in mijn voordeel, zeker in het begin. Het was direct duidelijk in welke module mijn code moest. De state en app functionaliteiten in appModule, event handlers, de init en de gameplay-loop in de main(controller) en UI gerelateerde zaken zoveel mogelijk in eigen modules als een class met bijbehorende methods. Maar de appModule en main raakte al snel met elkaar verweven, en toen ik eenmaal zover was dat ik de gameplay loop moest stroomlijnen (start spel -> begin -> middel -> einde -> start spel -> etc), dat was het moment dat ik even helemaal de draad kwijt was. Dus een refactor sessie was nodig. Voordat ik daaraan kon beginnen, moest ik echter eerst in kaart brengen hoe mijn code op dit moment werkte, en hoe het in de toekomst moet gaan werken. Om dit voor mezelf te visualiseren heb ik een model opgesteld, niet volgens een bestaande standaard (volgende keer wil ik dat wel), maar wel op een manier dat ik weer overzicht kreeg. Dit leidde tot success, waardoor het na het refactoren eigenlijk redelijk vlot ging. Daarna waren eventuele prestatiedips meer afkomstig vanuit vermoeidheid, dan warrige code.
+Flowchart (initial planning)
 
 ![Mental model for refactoring](./Models/Flowchart%20guess%20country%20game-Init-game-round%20summary.drawio.png)
+Ad-Hoc model created to clarify the current and the future application flow before refactoring
+
+## Ontwikkel Proces & Reflectie | Nederlandse versie (ENGLISH VERSION BELOW)
+
+### Mijn motivatie, Leerervaringen en Verantwoording:
+
+Dit was voor mij het tweede project dat ik zelfstandig bouwde in HTML/CSS en JavaScript. De aanleiding van dit project was de afronding van mijn JavaScript-cursus. Ik had veel nieuwe theoretische kennis meegekregen, en ik vond dat het tijd was om dat in de praktijk toe te passen. Dit project had een aanzienlijk grotere scope dan mijn vorige project, zeker aangezien mijn intentie al heel vroeg was om gebruik te maken van een externe library en een API, en dus was er iets vereist wat ik in mijn vorige project had nagelaten: een planning. Ik had de core van wat mijn spel moest zijn al in mijn hoofd zitten. De planning bestond uit:
+
+- User stories
+- Een flowchart
+- Een simpele mockup
+- Een splitsing voor welke modules verantwoordelijk moesten zijn voor welke code.
+
+Het grootste compliment dat ik mezelf kan geven is dat het uiteindelijke resultaat grotendeels overeenkomt met de oorspronkelijke planning. Een doel gezet en bereikt.
+
+Het project was niet zonder uitdagingen. Ik had halverwege nog best moeite om mijn code over verschillende modules te volgen. De appModule en main raakten al snel met elkaar verweven, en toen het punt aangebroken was dat de gameplay loop gestroomlijnd moest worden (start spel -> begin -> middel -> einde -> start spel -> etc.), was dat het moment dat ik even het overzicht in de applicatieflow kwijt was.
+
+Een refactor-sessie was dus nodig. Voordat ik daaraan kon beginnen, moest ik echter eerst in kaart brengen hoe mijn code op dat moment werkte, en hoe het in de toekomst moest gaan werken. Om dit voor mezelf te visualiseren, heb ik een model opgesteld, niet volgens een bestaande standaard, maar wel op een manier dat ik weer overzicht kreeg. Dit leidde tot succes, waardoor het na het refactoren eigenlijk redelijk vlot ging. Daarna waren eventuele prestatiedips meer afkomstig vanuit vermoeidheid, dan warrige code.
 
 ### Wat zou ik de volgende keer anders doen?
 
-Anders, op basis van fouten en verkeerde aanpakken, niet veel. Ik denk dat het vooral een kwestie is van mijn huidige aanpak aan te scherpen doormiddel van oefenen. Wel wil ik een betere manier van modelleren voordat ik ga refactoren, aangezien, zoals ik al zei, het nu op een eigen manier deed. Voor zo'n project prima, maar in teamverband of bij grotere projecten is dat natuurlijk niet houdbaar. Ook zou ik het liefste iets meer rust nemen tussendoor, echter had ik voor dit project een redelijk strakke deadline staan voor mezelf, dus dat was nu gewoon geen optie.
+Het is vooral een kwestie is van mijn huidige aanpak aanscherpen door herhaling. Wel wil ik een betere manier van modelleren voordat ik ga refactoren, aangezien ik het nu ad-hoc deed. Voor zo'n project prima, maar in teamverband of bij grotere projecten is dat niet houdbaar.
 
-Binnenkort start ik met React, en mijn volgende project zal dus ook gebruik maken van dat framework. Ook wil ik Jest gaan gebruiken voor testen. Dit is dus niet een kwestie van anders doen, maar mijn huidige toolset uitbreiden.
+Aspecten die op de planning staan voor het volgende project:
+
+- Nieuwe vormen van modelleren. Mogelijk de sequence diagram of de call graph. Geen vervanging voor de flowchart.
+- React-framework (basis)
+- Jest voor testen
 
 ### Wat ik nog wil toevoegen in de toekomst / bugfixes:
 
-Het project is nog niet af. In ieder geval wil ik een 2.0 versie uitbrengen waarin ik responsiveness aanbreng. Het lijkt me ontzettend leuk als ik dit ook op mijn telefoon zou kunnen spelen, dus die motivatie is ook wel persoonlijk. Ook lijkt het mij wel een leuk idee om bepaalde aspecten op te slaan in de local storage en om een functionaliteit te ontwikkelen om de geschiedenis van vorige spellen in te zien. Dus in feite de einduitslagen terug te zien op de kaart van vorige spellen. De data is er, en het is vooral een kwestie van het samenbrengen op de juiste plek.
+Een 2.0-versie volgt binnenkort. Hierin ligt de focus op:
 
-## English version
+- Responsive design
 
-### Game rules and features:
+Andere mogelijke features die ik mogelijk nog wil implementeren zijn:
 
-### My motivation, learning experiences, and justification:
+- Local storage implementatie.
+- De mogelijkheid om oude einduitslagen terug te kijken op de kaart. Data is aanwezig en moet alleen nog op de juiste plek samengebracht worden.
+
+Bugfixing:
+
+- Op dit moment zijn er geen bugs bekend.
+
+## Development Process & Reflection | English version
+
+### My motivation, Learning experiences, and Justification:
+
+This was the second project I built independently using HTML/CSS and JavaScript. The project was prompted by the completion of my JavaScript course. I had gained a lot of new theoretical knowledge, and I felt it was time to put it into practice. This project had a considerably broader scope than my previous one, particularly as I had intended from the very outset to use an external library and an API; consequently, it required something I’d neglected in my previous project: a plan. I already had the core concept of what my game was to be in my head. The planning consisted of the following:
+
+- User stories
+- A flowchart
+- A simple mock-up
+- A breakdown of which modules were responsible for which code.
+
+The greatest compliment I can pay myself is that the final result largely matches the original plan. A target set and reached.
+
+The project wasn’t without its challenges. Halfway through, I still found it quite difficult to keep track of my code across the different modules. The appModule and main quickly became intertwined, and when the time came to streamline the gameplay loop (start game -> beginning -> middle -> end -> start game -> etc.), that was the moment I briefly lost a clear overview of the application flow.
+
+A refactoring session was therefore needed. Before I could start, however, I first had to work out how my code was working at that moment, and how it needed to work in the future. To visualise this for myself, I drew up a model – not based on any existing standard, but in a way that allowed me to regain an overview. This proved successful, meaning that once the refactoring was complete, things actually went quite smoothly. After that, any dips in performance were down more to fatigue than to messy code.
 
 ### What would I do differently next time?
 
+It’s mainly a matter of refining my current approach through repetition. However, I do want to find a better way of modelling before I start refactoring, as I’ve been doing it on an ad hoc basis up to now. That’s fine for a project like this, but it’s not sustainable when working in a team or on larger projects.
+
+Items on the agenda for the next project:
+
+- New modelling approaches. Possibly sequence diagrams or call graphs. Not a replacement for flowcharts.
+- React framework (basics)
+- Jest for testing
+
 ### What I still want to add in the future / bug fixes:
+
+A 2.0 version will be released shortly. This will focus on:
+
+- Responsive design.
+
+Other features I may wish to implement include:
+
+- Local storage implementation.
+- The ability to view past final results on the map. The data is available and just needs to be collated in the right place.
+
+Bugfixing:
+
+- No known bugs at this time.
