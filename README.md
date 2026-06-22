@@ -68,9 +68,13 @@ Players must identify countries based on map markers, with real-time feedback an
 
 - Version control with conventional commit messages
 
+## Architecture
+
+## Key-challenges
+
 ## Nederlandse versie (ENGLISH VERSION BELOW)
 
-### spelregels en features:
+### Spelregels en features:
 
 Om het spel te beginnen, klik op start en het spel genereert een ronde waarin je het door de marker aangewezen land moet benoemen. Het spel eindigt wanneer je of 10 goede antwoorden hebt, of 10 foute antwoorden. Type je antwoord in het veld linksbovenin. Er zijn verschillende manieren om je antwoord te bevestigen en om de bijbehorende lijst te navigeren.
 
