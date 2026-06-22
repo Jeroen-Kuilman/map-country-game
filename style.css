@@ -405,6 +405,13 @@ p {
   z-index: 499;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+}
+
 .error-container {
   font-size: 1.8rem;
   color: var(--wrong-color);
