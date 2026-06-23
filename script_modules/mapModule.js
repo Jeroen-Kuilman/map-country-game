@@ -142,7 +142,7 @@ class MapInterface {
     const polyline = L.polyline(lastTwoCoords, {
       color: `${result === RESULT.CORRECT ? "#2AAD27" : "#CB2B3E"}`,
       weight: 2,
-      opacity: 60,
+      opacity: 0.6,
       dashArray: "5, 10",
     }).addTo(this._map);
     this._polyline = polyline;
