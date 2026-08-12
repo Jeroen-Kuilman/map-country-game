@@ -419,3 +419,7 @@ p {
   padding: 0.2rem 1rem;
   background-color: var(--text-color-light);
 }
+
+.mobile-ui {
+  display: none;
+}
