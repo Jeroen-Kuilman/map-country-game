@@ -26,13 +26,17 @@
   .header {
     display: flex;
     position: absolute;
+    justify-content: center;
     bottom: 0;
     left: 0;
-    height: 15vh;
-    gap: 4rem;
+    height: 10vh;
     margin: 0;
     padding: 0 1rem;
     width: 100%;
+  }
+
+  .feedback-title {
+    display: none;
   }
 
   .content-container {
@@ -69,7 +73,8 @@
   .search-box {
     position: absolute;
     top: 10rem;
-    left: 1rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: transparent;
 
     pointer-events: auto;
@@ -78,15 +83,9 @@
     box-shadow: none;
     border: none;
   }
-
-  /* .mobile-ui {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    inset: 0;
-    z-index: 10000;
-    pointer-events: none;
-  } */
+  #country-search-input {
+    opacity: 0.9;
+  }
 
   .footer {
     position: absolute;
@@ -99,5 +98,9 @@
 
   .btn {
     pointer-events: auto;
+  }
+
+  .leaflet-bottom {
+    bottom: 10% !important;
   }
 }
