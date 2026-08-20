@@ -98,6 +98,10 @@
     border: none;
   }
 
+  .desktop-hide {
+    display: inline;
+  }
+
   .mobile-hide {
     display: none;
   }

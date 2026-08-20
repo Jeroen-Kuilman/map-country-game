@@ -10,6 +10,7 @@ import shadowUrl from "leaflet/dist/images/marker-shadow.png";
 ///////////////////////////////////////////////////////
 
 class MapInterface {
+  _isMobile = window.innerWidth <= 768;
   _map = false;
   _marker;
   _markers = [];
@@ -60,12 +61,12 @@ class MapInterface {
           [90, 180], // northeast corner
         ],
         maxBoundsViscosity: 0.85,
-      }).setView([lat, lng], 3);
+      }).setView([lat, lng], this._isMobile ? 2.5 : 3);
       L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
         {
           maxZoom: 10,
-          minZoom: 3,
+          minZoom: this._isMobile ? 2 : 3,
           noWrap: true,
           attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>`,
           subdomains: "abcd",
@@ -73,7 +74,7 @@ class MapInterface {
       ).addTo(this._map);
       this._addGeo(geoData);
     } else {
-      this._map.flyTo([lat, lng], 5, {
+      this._map.flyTo([lat, lng], this._isMobile ? 4 : 5, {
         duration: 1,
       });
 
