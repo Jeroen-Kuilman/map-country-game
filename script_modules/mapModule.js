@@ -61,9 +61,9 @@ class MapInterface {
           [90, 180], // northeast corner
         ],
         maxBoundsViscosity: 0.85,
-      }).setView([lat, lng], this._isMobile ? 2.5 : 3);
+      }).setView([lat, lng], this._isMobile ? 2 : 3);
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png",
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png?key=cb1_4z08_1_9c2a79115e46109e7ac857f3",
         {
           maxZoom: 10,
           minZoom: this._isMobile ? 2 : 3,
